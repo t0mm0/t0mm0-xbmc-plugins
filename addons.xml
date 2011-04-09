@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addons>
+<addon id="plugin.video.veetle" version="0.1.0" name="Veetle" provider-name="t0mm0">
+    <requires>
+        <import addon="xbmc.gui"/>
+        <import addon="xbmc.plugin"/>
+        <import addon="script.module.simplejson" version="2.0.10"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension >
+    <extension point= "xbmc.addon.metadata">
+        <summary>Browse and stream from veetle.com</summary>
+        <description>Enables watching streams on veetle.com that are flash enabled.</description>
+        <disclaimer>Does not work for 'HD' streams which require a software download.</disclaimer>
+        <platform>all</platform>
+    </extension>
+</addon >
+
+<addon id="repository.t0mm0" name="t0mm0's XBMC Addons" version="1.0.0" provider-name="t0mm0 [dev@onairsoftware.co.uk]">
+	<extension point="xbmc.addon.repository" name="t0mm0's XBMC Addon Repository">
+		<info compressed="false">http://github.com/t0mm0/t0mm0-xbmc-plugins/raw/master/addons.xml</info>
+		<checksum>http://github.com/t0mm0-xbmc-plugins/raw/master/addons.xml.md5</checksum>
+		<datadir zip="false">http://github.com/t0mm0/t0mm0-xbmc-plugins/raw/master/</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Install t0mm0's Addons</summary>
+		<description>Download and install addons by t0mm0</description>
+		<platform>all</platform>
+	</extension>
+</addon>
+</addons>

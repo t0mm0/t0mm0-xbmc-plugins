@@ -7,12 +7,12 @@
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
         <provides>video</provides>
-    </extension >
+    </extension>
     <extension point= "xbmc.addon.metadata">
         <summary>Browse and stream from veetle.com</summary>
         <description>Enables watching streams on veetle.com that are flash enabled.</description>
         <disclaimer>Does not work for 'HD' streams which require a software download.</disclaimer>
         <platform>all</platform>
     </extension>
-</addon >
+</addon>
 

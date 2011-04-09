@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="repository.t0mm0" name="t0mm0's XBMC Addons" version="1.0.2" provider-name="t0mm0 [dev@onairsoftware.co.uk]">
+<addon id="repository.t0mm0" name="t0mm0's XBMC Addons" version="1.0.3" provider-name="t0mm0 [dev@onairsoftware.co.uk]">
 	<extension point="xbmc.addon.repository" name="t0mm0's XBMC Addon Repository">
 		<info compressed="false">http://github.com/t0mm0/t0mm0-xbmc-plugins/raw/master/addons.xml</info>
 		<checksum>http://github.com/t0mm0/t0mm0-xbmc-plugins/raw/master/addons.xml.md5</checksum>
-		<datadir zip="false">http://github.com/t0mm0/t0mm0-xbmc-plugins/raw/master/</datadir>
+		<datadir zip="true">http://github.com/t0mm0/t0mm0-xbmc-plugins/raw/master/repo/</datadir>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<summary>Install t0mm0's Addons</summary>

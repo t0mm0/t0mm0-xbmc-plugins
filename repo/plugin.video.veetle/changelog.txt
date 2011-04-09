@@ -1,2 +1,5 @@
+[B]Version 0.1.1[/B]
+- Quick fix for missing large thumbnail on a channel
+
 [B]Version 0.1.0[/B]
 - Initial version

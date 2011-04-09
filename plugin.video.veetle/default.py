@@ -57,7 +57,7 @@ if pluginQuery.startswith('?play='):
     stream_url = get_stream_url(channel_id)
     if stream_url:
         channel_info = get_channel_info(channel_id)            
-        listitem = xbmcgui.ListItem(channel_info['title'], iconImage=channel_info['logo']['sm'], thumbnailImage=channel_info['logo']['lg'])
+        listitem = xbmcgui.ListItem(channel_info['title'], iconImage=channel_info['logo']['sm'], thumbnailImage=channel_info['logo']['sm'])
         infoLabels = {'plot': channel_info['description']}
         listitem.setInfo('video', infoLabels)
         xbmc.Player().play(stream_url, listitem)    
@@ -75,7 +75,14 @@ else:
 
     for channel in channels:
         url = pluginUrl + '?play=' + channel['channelId']
-        listitem = xbmcgui.ListItem(channel['title'], iconImage=channel['logo']['sm'], thumbnailImage=channel['logo']['lg'])
+        sm = channel['logo'].get('sm', '')
+        lg = channel['logo'].get('lg', '')
+        if lg:
+            thumb = lg
+        else:
+            thumb = sm
+        
+        listitem = xbmcgui.ListItem(channel['title'], iconImage=thumb, thumbnailImage=thumb)
         infoLabels = {'plot': channel['description']}
         listitem.setInfo('video', infoLabels)
         xbmcplugin.addDirectoryItem(pluginHandle, url, listitem, isFolder=False)

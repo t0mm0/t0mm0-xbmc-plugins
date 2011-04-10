@@ -16,6 +16,21 @@
     </extension>
 </addon>
 
+<addon id="plugin.audio.jazzfm" version="0.1.0" name="Jazz FM" provider-name="t0mm0">
+    <requires>
+        <import addon="xbmc.python" version="1.0"/>
+        <import addon="script.module.beautifulsoup"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>audio</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Listen to live stream and recoded shows from Jazz FM.</summary>
+        <description>Check out http://jazzfm.com</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+
 <addon id="repository.t0mm0" name="t0mm0's XBMC Addons" version="1.0.3" provider-name="t0mm0 [dev@onairsoftware.co.uk]">
 	<extension point="xbmc.addon.repository" name="t0mm0's XBMC Addon Repository">
 		<info compressed="false">http://github.com/t0mm0/t0mm0-xbmc-plugins/raw/master/addons.xml</info>

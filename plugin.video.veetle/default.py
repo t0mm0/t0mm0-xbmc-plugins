@@ -60,7 +60,7 @@ if pluginQuery.startswith('?play='):
         listitem = xbmcgui.ListItem(channel_info['title'], iconImage=channel_info['logo']['sm'], thumbnailImage=channel_info['logo']['sm'])
         infoLabels = {'plot': channel_info['description']}
         listitem.setInfo('video', infoLabels)
-        xbmc.Player().play(stream_url, listitem)    
+        xbmc.Player(xbmc.PLAYER_CORE_DVDPLAYER).play(stream_url, listitem)    
 else:
     #Load the channel list
     response = urllib2.urlopen(CHANNEL_LISTING)

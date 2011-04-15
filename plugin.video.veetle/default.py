@@ -58,7 +58,7 @@ def get_channel_info(channel_id):
                 'programme': {'success': False}
                 } 
 
-class VeetleSchedule():
+class VeetleSchedule:
     def __init__(self, json_playlist, start_time, reference_clock):
         self.start_time = start_time
         self.playlist = self.populate_playlist(json_playlist, reference_clock)

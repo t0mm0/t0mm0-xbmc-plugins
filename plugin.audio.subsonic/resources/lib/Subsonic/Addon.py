@@ -17,12 +17,13 @@
 '''
 
 import sys
-import xbmcaddon, xbmcgui
+import urllib
+import xbmcaddon, xbmcgui, xbmcplugin
 
-__plugin_url = sys.argv[0]
-__plugin_handle = int(sys.argv[1])
-__plugin_query = sys.argv[2]
-__settings = xbmcaddon.Addon(id='plugin.video.subsonic')
+plugin_url = sys.argv[0]
+plugin_handle = int(sys.argv[1])
+plugin_query = sys.argv[2]
+addon = xbmcaddon.Addon(id='plugin.video.subsonic')
 
 def show_error(details):
     error = ['', '', '']
@@ -35,8 +36,36 @@ def show_error(details):
     ok = dialog.ok(get_string(30000), error[0], error[1], error[2])
     
 def get_setting(setting):
-    return __settings.getSetting(setting)
+    return addon.getSetting(setting)
     
 def get_string(string_id):
-    return __settings.getLocalizedString(string_id)   
+    return addon.getLocalizedString(string_id)   
+
+def add_music_item(item_id, infolabels, img='', total_items=0):
+    url = build_plugin_url({'mode': 'play',
+                            'item_id': item_id})
+    listitem = xbmcgui.ListItem(infolabels['title'], iconImage=img, 
+                                thumbnailImage=img)
+    listitem.setInfo('music', infolabels)
+    listitem.setProperty('IsPlayable', 'true')
+    xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
+                                isFolder=False, totalItems=total_items)
+
+def add_directory(url_queries, title, img='', total_items=0):
+    url = build_plugin_url(url_queries)
+    listitem = xbmcgui.ListItem(title, iconImage=img, thumbnailImage=img)
+    xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
+                                isFolder=True, totalItems=total_items)
+
+def end_of_directory():
+    xbmcplugin.endOfDirectory(plugin_handle)
+
+                                
+def build_plugin_url(queries):
+    url = plugin_url + '?' + '&'.join([k+'='+urllib.quote(str(v)) 
+                                      for (k,v) in queries.items()])
+    return url
+    
+def show_settings():
+    addon.openSettings()
 

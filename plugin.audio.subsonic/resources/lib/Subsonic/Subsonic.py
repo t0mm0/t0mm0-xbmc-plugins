@@ -19,6 +19,7 @@
 import simplejson as json
 import urllib, urllib2
 import xbmc
+import Addon
 
 class Subsonic:
     def __init__(self, server, user, password):

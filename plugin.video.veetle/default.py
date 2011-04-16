@@ -25,7 +25,8 @@ import xbmc, xbmcaddon, xbmcplugin, xbmcgui
 pluginUrl = sys.argv[0]
 pluginHandle = int(sys.argv[1])
 pluginQuery = sys.argv[2]
-__language__ = xbmcaddon.Addon(id='plugin.video.veetle').getLocalizedString
+__settings__ = xbmcaddon.Addon(id='plugin.video.veetle')
+__language__ = __settings__.getLocalizedString
 
 BASE_URL = 'http://www.veetle.com'
 CHANNEL_LISTING = BASE_URL + '/channel-listing-cross-site.js'
@@ -121,7 +122,7 @@ else:
                                                                
     print 'Flash Enabled veetle.com Channels: %d' % len(channels)
 
-    do_grab = xbmcplugin.getSetting(pluginHandle, 'grab_schedule')
+    do_grab = __settings__.getSetting('grab_schedule')
     for channel in channels:
         url = pluginUrl + '?play=' + channel['channelId']
         sm = channel['logo'].get('sm', '')

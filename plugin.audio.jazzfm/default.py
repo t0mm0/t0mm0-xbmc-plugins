@@ -18,7 +18,7 @@
 
 import xbmc, xbmcplugin, xbmcgui
 from BeautifulSoup import BeautifulSoup
-import urllib, urllib2, urlparse
+import urllib, urllib2, cgi
 import re
 
 pluginUrl = sys.argv[0]
@@ -49,7 +49,7 @@ def add_stream(title, thumb, comment, data_url):
     xbmcplugin.addDirectoryItem(pluginHandle, url, listitem, isFolder=False)
 
 
-query = urlparse.parse_qs(pluginQuery[1:])
+query = cgi.parse_qs(pluginQuery[1:])
 
 for key, value in query.items():
     query[key] = value[0]

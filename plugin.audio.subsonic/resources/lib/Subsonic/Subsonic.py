@@ -28,7 +28,20 @@ class Subsonic:
         self.password = password
         self.api_version = '1.5.0'
         self.client_name='xbmc'
-    
+        
+    def ping(self):
+        payload = self.__get_json('ping.view')
+        return payload
+        
+    def get_music_folders(self):
+        payload = self.__get_json('getMusicFolders.view')
+        folders = payload['musicFolders']['musicFolder']
+        total = len(folders)
+        for folder in folders:
+            Addon.add_directory({'mode': 'list', 'folder_id': folder['id']}, 
+                                folder['name'], total_items=total)
+        Addon.end_of_directory()
+        
     def __get_json(self, url):
         json_response = None
         url = '%s/rest/%s?v=%s&c=%s&f=json&u=%s&p=%s' % (self.server, url, 
@@ -51,7 +64,4 @@ class Subsonic:
             Addon.show_error([payload['error']['message'], 
                        'json version: ' + payload['version']])  
             return False 
-        
-    def ping(self):
-        payload = self.__get_json('ping.view')
-        return payload
+

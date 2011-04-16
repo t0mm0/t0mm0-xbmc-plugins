@@ -22,9 +22,7 @@ subsonic = Subsonic.Subsonic(Addon.get_setting('server'),
                     Addon.get_setting('user'), 
                     Addon.get_setting('password'))
 if subsonic.ping():
-    Addon.add_music_item('12345', {'title': 'a title', 'artist': 'an artist'})
-    Addon.add_directory({'mode': 'something'}, 'a folder')
-    Addon.end_of_directory()
+    subsonic.get_music_folders()
 
 else:
     Addon.show_settings()

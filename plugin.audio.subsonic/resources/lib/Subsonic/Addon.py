@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import logging
 import sys
 import urllib
 import xbmcaddon, xbmcgui, xbmcplugin
@@ -25,13 +26,19 @@ plugin_handle = int(sys.argv[1])
 plugin_query = sys.argv[2]
 addon = xbmcaddon.Addon(id='plugin.video.subsonic')
 
+logging.basicConfig(
+    stream=sys.stdout,
+    level=logging.DEBUG,
+    format='Subsonic: %(levelname)s %(message)s',
+    )
+
 def show_error(details):
     error = ['', '', '']
     text = ''
     for k, v in enumerate(details):
         error[k] = v
         text += v + ' '
-    print 'Subsonic: ' + text
+    logging.error(text)
     dialog = xbmcgui.Dialog()
     ok = dialog.ok(get_string(30000), error[0], error[1], error[2])
     
@@ -44,6 +51,7 @@ def get_string(string_id):
 def add_music_item(item_id, infolabels, img='', total_items=0):
     url = build_plugin_url({'mode': 'play',
                             'item_id': item_id})
+    logging.debug('adding item: %s - %s' % (infolabels['title'], url))
     listitem = xbmcgui.ListItem(infolabels['title'], iconImage=img, 
                                 thumbnailImage=img)
     listitem.setInfo('music', infolabels)
@@ -53,6 +61,8 @@ def add_music_item(item_id, infolabels, img='', total_items=0):
 
 def add_directory(url_queries, title, img='', total_items=0):
     url = build_plugin_url(url_queries)
+    logging.debug('adding dir: %s - %s' % (title, url))
+    print
     listitem = xbmcgui.ListItem(title, iconImage=img, thumbnailImage=img)
     xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
                                 isFolder=True, totalItems=total_items)

@@ -30,10 +30,12 @@ class Subsonic:
         self.client_name='xbmc'
         
     def ping(self):
+        Addon.logging.debug('ping')
         payload = self.__get_json('ping.view')
         return payload
         
     def get_music_folders(self):
+        Addon.logging.debug('get_music_folders')
         payload = self.__get_json('getMusicFolders.view')
         folders = payload['musicFolders']['musicFolder']
         total = len(folders)

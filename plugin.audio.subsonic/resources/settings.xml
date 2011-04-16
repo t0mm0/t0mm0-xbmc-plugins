@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+	<setting id="server" type="text" label="30100" default="http://demo.subsonic.org" />
+	<setting id="user" type="text" label="30101" default="guest2" />
+	<setting id="password" type="text" option="hidden" label="30102" default="guest" />
+</settings>

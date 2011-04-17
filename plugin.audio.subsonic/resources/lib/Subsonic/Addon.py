@@ -23,12 +23,6 @@ import sys
 import urllib
 import xbmcaddon, xbmcgui, xbmcplugin
 
-logging.basicConfig(
-    stream=sys.stdout,
-    level=logging.DEBUG,
-    format='Subsonic: %(levelname)s %(message)s',
-    )
-
 def show_error(details):
     error = ['', '', '']
     text = ''
@@ -129,5 +123,16 @@ def decode_dict(data):
         if type(v) is str or type(v) is unicode:
             data[k] = decode(v)
     return data
+
 addon = xbmcaddon.Addon(id='plugin.audio.subsonic')
+
+if get_setting('debug') == 'true':
+    level = logging.DEBUG
+else:
+    level = logging.ERROR
+logging.basicConfig(
+    stream=sys.stdout,
+    level=level,
+    format='Subsonic: %(levelname)s %(message)s',
+    )
 

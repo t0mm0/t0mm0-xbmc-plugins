@@ -79,6 +79,13 @@ def add_song(song, img='', total_items=0):
         infolabels['year'] = year
     add_music_item(song['id'], infolabels, img, total_items)
 
+def add_album(album, img='', total_items=0):
+    infolabels = {'title': album.get('title', get_string(30003)),
+                  'artist': album.get('artist', get_string(30004)),
+                  }
+    add_directory({'mode': 'get_music_directory', 'id': album['id']}, 
+                  album['title'], img, total_items)
+
 def resolve_url(stream_url):
     xbmcplugin.setResolvedUrl(plugin_handle, True, 
                               xbmcgui.ListItem(path=stream_url))

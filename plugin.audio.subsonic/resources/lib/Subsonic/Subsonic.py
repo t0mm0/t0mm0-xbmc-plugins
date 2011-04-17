@@ -57,8 +57,13 @@ class Subsonic:
     def get_music_directory(self, music_id):
         Addon.logging.debug('get_music_directory: ' + music_id)
         payload = self.__get_json('getMusicDirectory.view', {'id': music_id})
-        [Addon.add_song(song, self.get_cover_art_url(song.get('coverArt', None))) 
-            for song in payload['directory']['child'] if type(song) is dict]        
+        for song in payload['directory']['child']: 
+            if type(song) is dict:
+                cover_art = self.get_cover_art_url(song.get('coverArt', None))
+                if song['isDir']:
+                    Addon.add_album(song, cover_art)
+                else:    
+                    Addon.add_song(song, cover_art)
         Addon.end_of_directory()
 
     def play(self, song_id):

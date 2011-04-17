@@ -37,7 +37,27 @@ if subsonic.ping():
         subsonic.get_music_directory(Addon.plugin_queries['id'])
     elif Addon.plugin_queries['mode'] == 'play': 
         subsonic.play(Addon.plugin_queries['id'])
+    elif Addon.plugin_queries['mode'] == 'search':
+        search_mode = Addon.plugin_queries.get('search_mode', '')
+        if search_mode: 
+            q = Addon.plugin_queries.get('q', '')
+            if not q:
+                q = Addon.get_input(Addon.get_string({'artist': 30007,
+                                                      'album': 30008,
+                                                      'song': 30009}[search_mode]))
+            if q:
+                subsonic.search(search_mode, q)
+        else:
+            Addon.add_directory({'mode': 'search', 'search_mode': 'artist'}, 
+                                Addon.get_string(30007))
+            Addon.add_directory({'mode': 'search', 'search_mode': 'album'}, 
+                                Addon.get_string(30008))
+            Addon.add_directory({'mode': 'search', 'search_mode': 'song'}, 
+                                Addon.get_string(30009))
+            Addon.end_of_directory()
+        
     else:
+        Addon.add_directory({'mode': 'search'}, Addon.get_string(30006))
         subsonic.get_music_folders()
 else:
     Addon.show_settings()

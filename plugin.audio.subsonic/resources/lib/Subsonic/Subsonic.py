@@ -38,9 +38,7 @@ class Subsonic:
     def get_music_folders(self):
         Addon.logging.debug('get_music_folders')
         payload = self.__get_json('getMusicFolders.view')
-        folders = payload['musicFolders']['musicFolder']
-        if type(folders) is not list:
-            folders = [folders]
+        folders = self.listify(payload['musicFolders']['musicFolder'])
         total = len(folders)
         for folder in folders:
             if type(folder) is dict:
@@ -61,9 +59,10 @@ class Subsonic:
     def get_music_directory(self, music_id):
         Addon.logging.debug('get_music_directory: ' + music_id)
         payload = self.__get_json('getMusicDirectory.view', {'id': music_id})
-        songs = payload['directory']['child']
-        if type(songs) is not list:
-            songs = [songs]
+        songs = self.listify(payload['directory']['child'])
+        self.display_music_directory(songs)
+        
+    def display_music_directory(self, songs):
         for song in songs: 
             if type(song) is dict:
                 cover_art = self.get_cover_art_url(song.get('coverArt', None))
@@ -83,6 +82,21 @@ class Subsonic:
         else:
             Addon.resolve_url(self.build_rest_url('download.view', 
                                                   {'id': song_id}))
+    def search(self, search_mode, query): 
+        Addon.logging.debug('search: ' + query)
+        queries = {'query': query, 'albumCount': 0, 'artistCount': 0,
+                   'songCount': 0}
+        queries[search_mode + 'Count'] = 999
+        payload = self.__get_json('search2.view', queries)        
+        if payload['searchResult2']:
+            items = self.listify(payload['searchResult2'][search_mode])
+            if search_mode == 'artist':
+                [Addon.add_artist(i) for i in items if type(i) is dict]
+                Addon.end_of_directory()
+            else:
+                self.display_music_directory(items)
+        else:
+            Addon.show_dialog([Addon.get_string(30010)])
 
     def get_cover_art_url(self, cover_art_id):
         url = ''
@@ -100,6 +114,12 @@ class Subsonic:
         Addon.logging.debug('queries: ' + str(queries))
         query = Addon.build_query(queries)
         return '%s/rest/%s?%s' % (self.server, method, query) 
+    
+    def listify(self, data):
+        if type(data) is not list:
+            return [data]
+        else:
+            return data
 
     def __get_json(self, method, queries={}):
         json_response = None

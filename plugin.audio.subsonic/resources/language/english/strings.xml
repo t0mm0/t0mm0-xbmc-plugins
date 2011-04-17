@@ -6,6 +6,11 @@
     <string id="30003">Unknown Title</string>
     <string id="30004">Unknown Artist</string>
     <string id="30005">Unknown Album</string>
+    <string id="30006">Search</string>
+    <string id="30007">Search Artist</string>
+    <string id="30008">Search Album</string>
+    <string id="30009">Search Song</string>
+    <string id="30010">No search results</string>
     <string id="30100">Server Address</string>
     <string id="30101">Username</string>
     <string id="30102">Password</string>

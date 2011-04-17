@@ -21,17 +21,23 @@ import logging
 import re
 import sys
 import urllib
-import xbmcaddon, xbmcgui, xbmcplugin
+import xbmc, xbmcaddon, xbmcgui, xbmcplugin
 
 def show_error(details):
+    show_dialog(details, get_string(30000), True)
+
+def show_dialog(details, title='Subsonic', is_error=False):
     error = ['', '', '']
     text = ''
     for k, v in enumerate(details):
         error[k] = v
         text += v + ' '
-    logging.error(text)
+    if is_error:    
+        logging.error(text)
+    else:
+        logging.debug(text)
     dialog = xbmcgui.Dialog()
-    ok = dialog.ok(get_string(30000), error[0], error[1], error[2])
+    ok = dialog.ok(title, error[0], error[1], error[2])
     
 def get_setting(setting):
     return addon.getSetting(setting)
@@ -106,6 +112,14 @@ def parse_query(query):
 
 def show_settings():
     addon.openSettings()
+
+def get_input(title='', default=''):
+    kb = xbmc.Keyboard(default, title, False)
+    kb.doModal()
+    if (kb.isConfirmed()):
+        return kb.getText()
+    else:
+        return False
 
 #http://stackoverflow.com/questions/1208916/decoding-html-entities-with-python/1208931#1208931
 def _callback(matches):

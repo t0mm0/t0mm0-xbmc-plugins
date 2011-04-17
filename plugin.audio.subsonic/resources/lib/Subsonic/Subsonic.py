@@ -39,10 +39,14 @@ class Subsonic:
         Addon.logging.debug('get_music_folders')
         payload = self.__get_json('getMusicFolders.view')
         folders = payload['musicFolders']['musicFolder']
+        if type(folders) is dict:
+            folders = [folders]
         total = len(folders)
         for folder in folders:
-            Addon.add_directory({'mode': 'list_indexes', 'folder_id': folder['id']}, 
-                                folder['name'], total_items=total)
+            if type(folder) is dict:
+                Addon.add_directory({'mode': 'list_indexes', 
+                                     'folder_id': folder['id']}, 
+                                    folder['name'], total_items=total)
         Addon.end_of_directory()
 
     def get_indexes(self, folder_id):

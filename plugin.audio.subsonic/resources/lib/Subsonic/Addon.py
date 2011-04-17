@@ -111,5 +111,5 @@ def parse_query(query):
 def show_settings():
     addon.openSettings()
 
-addon = xbmcaddon.Addon(id='plugin.video.subsonic')
+addon = xbmcaddon.Addon(id='plugin.audio.subsonic')
 

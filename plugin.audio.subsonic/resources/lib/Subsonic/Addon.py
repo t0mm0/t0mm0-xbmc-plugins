@@ -66,6 +66,18 @@ def add_artist(artist, total_items=0):
     url_queries = {'mode': 'get_music_directory', 'id': artist['id']}
     add_directory(url_queries, artist['name'], total_items=total_items) 
 
+def add_song(song, img='', total_items=0):
+    infolabels = {'title': song.get('title', get_string(30003)),
+                  'artist': song.get('artist', get_string(30004)),
+                  'album': song.get('album', get_string(30005)),
+                  'tracknumber': song.get('track', 0),
+                  'genre': song.get('genre', ''),
+                  }
+    year = song.get('year', None)
+    if year:
+        infolabels['year'] = year
+    add_music_item(song['id'], infolabels, img, total_items)
+                  
 def end_of_directory():
     xbmcplugin.endOfDirectory(plugin_handle)
 

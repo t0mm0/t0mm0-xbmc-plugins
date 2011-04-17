@@ -3,6 +3,9 @@
     <string id="30000">Subsonic Error</string>
     <string id="30001">Error contacting server.</string>
     <string id="30002">Error reading response from server.</string>
+    <string id="30003">Unknown Title</string>
+    <string id="30004">Unknown Artist</string>
+    <string id="30005">Unknown Album</string>
     <string id="30100">Server Address</string>
     <string id="30101">Username</string>
     <string id="30102">Password</string>

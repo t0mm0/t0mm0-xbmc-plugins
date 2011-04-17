@@ -28,10 +28,13 @@ subsonic = Subsonic.Subsonic(Addon.get_setting('server'),
                              Addon.get_setting('password'))
 
 Addon.logging.debug('plugin queries: ' + str(Addon.plugin_queries))
+Addon.logging.debug('plugin handle: ' + str(Addon.plugin_handle))
 
 if subsonic.ping():
     if Addon.plugin_queries['mode'] == 'list_indexes': 
         subsonic.get_indexes(Addon.plugin_queries['folder_id'])
+    elif Addon.plugin_queries['mode'] == 'get_music_directory': 
+        subsonic.get_music_directory(Addon.plugin_queries['id'])
     else:
         subsonic.get_music_folders()
 else:

@@ -45,24 +45,41 @@ class Subsonic:
         Addon.end_of_directory()
 
     def get_indexes(self, folder_id):
-        Addon.logging.debug('get_indexes')
+        Addon.logging.debug('get_indexes: ' + folder_id)
         payload = self.__get_json('getIndexes.view', {'musicFolderId': folder_id})
         indexes = payload['indexes']['index']
         index = []
         [index.extend(i) for i in [i['artist'] for i in indexes]]
         [Addon.add_artist(i) for i in index if type(i) is dict]
         Addon.end_of_directory()
-      
-    def __get_json(self, url, queries={}):
+
+    def get_music_directory(self, music_id):
+        Addon.logging.debug('get_music_directory: ' + music_id)
+        payload = self.__get_json('getMusicDirectory.view', {'id': music_id})
+        [Addon.add_song(song, self.get_cover_art_url(song.get('coverArt', None))) 
+            for song in payload['directory']['child'] if type(song) is dict]        
+        Addon.end_of_directory()
+
+    def get_cover_art_url(self, cover_art_id):
+        url = ''
+        if cover_art_id:
+            url = self.build_rest_url('getCoverArt', {'id': cover_art_id})
+            Addon.logging.debug('cover art: ' + url)
+        return url
+                      
+    def build_rest_url(self, method, queries):
         queries.update({'v': self.api_version, 
                         'c': self.client_name, 
                         'u': self.user, 
                         'p': self.password,
                         'f': 'json'})
         Addon.logging.debug('queries: ' + str(queries))
-        json_response = None
         query = Addon.build_query(queries)
-        url = '%s/rest/%s?%s' % (self.server, url, query) 
+        return '%s/rest/%s?%s' % (self.server, method, query) 
+
+    def __get_json(self, method, queries={}):
+        json_response = None
+        url = self.build_rest_url(method, queries)
         Addon.logging.debug('getting ' + url)
         try:
             response = urllib2.urlopen(url)

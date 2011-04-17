@@ -9,4 +9,8 @@
     <string id="30100">Server Address</string>
     <string id="30101">Username</string>
     <string id="30102">Password</string>
+    <string id="30103">Quality</string>
+    <string id="30104">Transcode</string>
+    <string id="30105">Bitrate</string>
+    <string id="30106">Server</string>
 </strings>

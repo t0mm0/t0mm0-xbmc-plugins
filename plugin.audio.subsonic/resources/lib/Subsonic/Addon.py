@@ -72,6 +72,7 @@ def add_song(song, img='', total_items=0):
                   'album': song.get('album', get_string(30005)),
                   'tracknumber': song.get('track', 0),
                   'genre': song.get('genre', ''),
+                  'duration': song.get('duration', 0),
                   }
     year = song.get('year', None)
     if year:

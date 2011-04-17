@@ -22,6 +22,7 @@ import xbmc
 import Addon
 
 class Subsonic:
+    bitrates = [32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320]
     def __init__(self, server, user, password):
         self.server = server
         self.user = user
@@ -62,7 +63,14 @@ class Subsonic:
 
     def play(self, song_id):
         Addon.logging.debug('play: ' + song_id)
-        Addon.resolve_url(self.build_rest_url('download.view', {'id': song_id}))
+        if Addon.get_setting('transcode') == 'true':
+            bitrate = self.bitrates[int(Addon.get_setting('bitrate'))]
+            Addon.resolve_url(self.build_rest_url('stream.view', 
+                                                  {'id': song_id,
+                                                   'maxBitRate': bitrate}))
+        else:
+            Addon.resolve_url(self.build_rest_url('download.view', 
+                                                  {'id': song_id}))
 
     def get_cover_art_url(self, cover_art_id):
         url = ''

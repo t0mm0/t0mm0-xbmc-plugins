@@ -16,15 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import cgi
 import logging
 import sys
 import urllib
 import xbmcaddon, xbmcgui, xbmcplugin
-
-plugin_url = sys.argv[0]
-plugin_handle = int(sys.argv[1])
-plugin_query = sys.argv[2]
-addon = xbmcaddon.Addon(id='plugin.video.subsonic')
 
 logging.basicConfig(
     stream=sys.stdout,
@@ -62,20 +58,34 @@ def add_music_item(item_id, infolabels, img='', total_items=0):
 def add_directory(url_queries, title, img='', total_items=0):
     url = build_plugin_url(url_queries)
     logging.debug('adding dir: %s - %s' % (title, url))
-    print
     listitem = xbmcgui.ListItem(title, iconImage=img, thumbnailImage=img)
     xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
                                 isFolder=True, totalItems=total_items)
 
+def add_artist(artist, total_items=0):
+    url_queries = {'mode': 'get_music_directory', 'id': artist['id']}
+    add_directory(url_queries, artist['name'], total_items=total_items) 
+
 def end_of_directory():
     xbmcplugin.endOfDirectory(plugin_handle)
 
+def build_query(queries):
+    return '&'.join([k+'='+urllib.quote(str(v)) for (k,v) in queries.items()])
                                 
 def build_plugin_url(queries):
-    url = plugin_url + '?' + '&'.join([k+'='+urllib.quote(str(v)) 
-                                      for (k,v) in queries.items()])
+    url = plugin_url + '?' + build_query(queries)
     return url
-    
+
+def parse_query(query):
+    queries = cgi.parse_qs(query)
+    q = {}
+    for key, value in queries.items():
+        q[key] = value[0]
+    q['mode'] = q.get('mode', 'main')
+    return q
+
 def show_settings():
     addon.openSettings()
+
+addon = xbmcaddon.Addon(id='plugin.video.subsonic')
 

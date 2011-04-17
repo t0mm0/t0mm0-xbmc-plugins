@@ -17,13 +17,23 @@
 '''
 
 from resources.lib.Subsonic import Addon, Subsonic
+import sys
+
+Addon.plugin_url = sys.argv[0]
+Addon.plugin_handle = int(sys.argv[1])
+Addon.plugin_queries = Addon.parse_query(sys.argv[2][1:])
 
 subsonic = Subsonic.Subsonic(Addon.get_setting('server'), 
-                    Addon.get_setting('user'), 
-                    Addon.get_setting('password'))
-if subsonic.ping():
-    subsonic.get_music_folders()
+                             Addon.get_setting('user'), 
+                             Addon.get_setting('password'))
 
+Addon.logging.debug('plugin queries: ' + str(Addon.plugin_queries))
+
+if subsonic.ping():
+    if Addon.plugin_queries['mode'] == 'list_indexes': 
+        subsonic.get_indexes(Addon.plugin_queries['folder_id'])
+    else:
+        subsonic.get_music_folders()
 else:
     Addon.show_settings()
 

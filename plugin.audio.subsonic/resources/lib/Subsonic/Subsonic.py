@@ -40,20 +40,36 @@ class Subsonic:
         folders = payload['musicFolders']['musicFolder']
         total = len(folders)
         for folder in folders:
-            Addon.add_directory({'mode': 'list', 'folder_id': folder['id']}, 
+            Addon.add_directory({'mode': 'list_indexes', 'folder_id': folder['id']}, 
                                 folder['name'], total_items=total)
         Addon.end_of_directory()
-        
-    def __get_json(self, url):
+
+    def get_indexes(self, folder_id):
+        Addon.logging.debug('get_indexes')
+        payload = self.__get_json('getIndexes.view', {'musicFolderId': folder_id})
+        indexes = payload['indexes']['index']
+        index = []
+        [index.extend(i) for i in [i['artist'] for i in indexes]]
+        [Addon.add_artist(i) for i in index if type(i) is dict]
+        Addon.end_of_directory()
+      
+    def __get_json(self, url, queries={}):
+        queries.update({'v': self.api_version, 
+                        'c': self.client_name, 
+                        'u': self.user, 
+                        'p': self.password,
+                        'f': 'json'})
+        Addon.logging.debug('queries: ' + str(queries))
         json_response = None
-        url = '%s/rest/%s?v=%s&c=%s&f=json&u=%s&p=%s' % (self.server, url, 
-              self.api_version, self.client_name, self.user, self.password) 
+        query = Addon.build_query(queries)
+        url = '%s/rest/%s?%s' % (self.server, url, query) 
+        Addon.logging.debug('getting ' + url)
         try:
             response = urllib2.urlopen(url)
             try:
                 json_response = json.loads(response.read())
             except ValueError:
-                show_error([Addon.get_string(30002)])
+                Addon.show_error([Addon.get_string(30002)])
                 return False
         except urllib2.URLError, e:
             Addon.show_error([Addon.get_string(30001), str(e.reason)])

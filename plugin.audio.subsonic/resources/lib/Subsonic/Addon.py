@@ -69,12 +69,12 @@ def add_artist(artist, total_items=0):
     add_directory(url_queries, artist['name'], total_items=total_items) 
 
 def add_song(song, img='', total_items=0):
-    infolabels = {'title': song.get('title', get_string(30003)),
-                  'artist': song.get('artist', get_string(30004)),
-                  'album': song.get('album', get_string(30005)),
-                  'tracknumber': song.get('track', 0),
-                  'genre': song.get('genre', ''),
-                  'duration': song.get('duration', 0),
+    infolabels = {'title': unicode(song.get('title', get_string(30003))),
+                  'artist': unicode(song.get('artist', get_string(30004))),
+                  'album': unicode(song.get('album', get_string(30005))),
+                  'tracknumber': int(song.get('track', 0)),
+                  'genre': unicode(song.get('genre', '')),
+                  'duration': int(song.get('duration', 0)),
                  }
     year = song.get('year', None)
     if year:
@@ -82,8 +82,8 @@ def add_song(song, img='', total_items=0):
     add_music_item(song['id'], infolabels, img, total_items)
 
 def add_album(album, img='', total_items=0):
-    infolabels = {'title': album.get('title', get_string(30003)),
-                  'artist': album.get('artist', get_string(30004)),
+    infolabels = {'title': unicode(album.get('title', get_string(30003))),
+                  'artist': unicode(album.get('artist', get_string(30004))),
                  }
     add_directory({'mode': 'get_music_directory', 'id': album['id']}, 
                   album['title'], img, total_items)

@@ -46,7 +46,7 @@ def get_string(string_id):
 
 def add_music_item(item_id, infolabels, img='', total_items=0):
     url = build_plugin_url({'mode': 'play',
-                            'item_id': item_id})
+                            'id': item_id})
     logging.debug('adding item: %s - %s' % (infolabels['title'], url))
     listitem = xbmcgui.ListItem(infolabels['title'], iconImage=img, 
                                 thumbnailImage=img)
@@ -77,7 +77,11 @@ def add_song(song, img='', total_items=0):
     if year:
         infolabels['year'] = year
     add_music_item(song['id'], infolabels, img, total_items)
-                  
+
+def resolve_url(stream_url):
+    xbmcplugin.setResolvedUrl(plugin_handle, True, 
+                              xbmcgui.ListItem(path=stream_url))
+
 def end_of_directory():
     xbmcplugin.endOfDirectory(plugin_handle)
 

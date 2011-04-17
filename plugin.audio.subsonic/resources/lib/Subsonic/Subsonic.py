@@ -60,10 +60,14 @@ class Subsonic:
             for song in payload['directory']['child'] if type(song) is dict]        
         Addon.end_of_directory()
 
+    def play(self, song_id):
+        Addon.logging.debug('play: ' + song_id)
+        Addon.resolve_url(self.build_rest_url('download.view', {'id': song_id}))
+
     def get_cover_art_url(self, cover_art_id):
         url = ''
         if cover_art_id:
-            url = self.build_rest_url('getCoverArt', {'id': cover_art_id})
+            url = self.build_rest_url('getCoverArt.view', {'id': cover_art_id})
             Addon.logging.debug('cover art: ' + url)
         return url
                       

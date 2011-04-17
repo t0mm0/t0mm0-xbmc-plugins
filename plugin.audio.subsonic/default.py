@@ -35,6 +35,8 @@ if subsonic.ping():
         subsonic.get_indexes(Addon.plugin_queries['folder_id'])
     elif Addon.plugin_queries['mode'] == 'get_music_directory': 
         subsonic.get_music_directory(Addon.plugin_queries['id'])
+    elif Addon.plugin_queries['mode'] == 'play': 
+        subsonic.play(Addon.plugin_queries['id'])
     else:
         subsonic.get_music_folders()
 else:

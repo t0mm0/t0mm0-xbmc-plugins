@@ -39,7 +39,7 @@ class Subsonic:
         Addon.logging.debug('get_music_folders')
         payload = self.__get_json('getMusicFolders.view')
         folders = payload['musicFolders']['musicFolder']
-        if type(folders) is dict:
+        if type(folders) is not list:
             folders = [folders]
         total = len(folders)
         for folder in folders:
@@ -61,7 +61,10 @@ class Subsonic:
     def get_music_directory(self, music_id):
         Addon.logging.debug('get_music_directory: ' + music_id)
         payload = self.__get_json('getMusicDirectory.view', {'id': music_id})
-        for song in payload['directory']['child']: 
+        songs = payload['directory']['child']
+        if type(songs) is not list:
+            songs = [songs]
+        for song in songs: 
             if type(song) is dict:
                 cover_art = self.get_cover_art_url(song.get('coverArt', None))
                 if song['isDir']:

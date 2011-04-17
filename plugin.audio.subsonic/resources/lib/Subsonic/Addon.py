@@ -18,6 +18,7 @@
 
 import cgi
 import logging
+import re
 import sys
 import urllib
 import xbmcaddon, xbmcgui, xbmcplugin
@@ -45,6 +46,7 @@ def get_string(string_id):
     return addon.getLocalizedString(string_id)   
 
 def add_music_item(item_id, infolabels, img='', total_items=0):
+    infolabels = decode_dict(infolabels)
     url = build_plugin_url({'mode': 'play',
                             'id': item_id})
     logging.debug('adding item: %s - %s' % (infolabels['title'], url))
@@ -58,7 +60,7 @@ def add_music_item(item_id, infolabels, img='', total_items=0):
 def add_directory(url_queries, title, img='', total_items=0):
     url = build_plugin_url(url_queries)
     logging.debug('adding dir: %s - %s' % (title, url))
-    listitem = xbmcgui.ListItem(title, iconImage=img, thumbnailImage=img)
+    listitem = xbmcgui.ListItem(decode(title), iconImage=img, thumbnailImage=img)
     xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
                                 isFolder=True, totalItems=total_items)
 
@@ -73,7 +75,7 @@ def add_song(song, img='', total_items=0):
                   'tracknumber': song.get('track', 0),
                   'genre': song.get('genre', ''),
                   'duration': song.get('duration', 0),
-                  }
+                 }
     year = song.get('year', None)
     if year:
         infolabels['year'] = year
@@ -82,7 +84,7 @@ def add_song(song, img='', total_items=0):
 def add_album(album, img='', total_items=0):
     infolabels = {'title': album.get('title', get_string(30003)),
                   'artist': album.get('artist', get_string(30004)),
-                  }
+                 }
     add_directory({'mode': 'get_music_directory', 'id': album['id']}, 
                   album['title'], img, total_items)
 
@@ -111,5 +113,21 @@ def parse_query(query):
 def show_settings():
     addon.openSettings()
 
+#http://stackoverflow.com/questions/1208916/decoding-html-entities-with-python/1208931#1208931
+def _callback(matches):
+    id = matches.group(1)
+    try:
+        return unichr(int(id))
+    except:
+        return id
+
+def decode(data):
+    return re.sub("&#(\d+)(;|(?=\s))", _callback, data)
+
+def decode_dict(data):
+    for k, v in data.items():
+        if type(v) is str or type(v) is unicode:
+            data[k] = decode(v)
+    return data
 addon = xbmcaddon.Addon(id='plugin.audio.subsonic')
 

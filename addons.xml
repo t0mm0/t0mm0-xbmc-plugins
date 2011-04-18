@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addons>
-<addon id="plugin.audio.subsonic" version="0.1.0" name="Subsonic" provider-name="t0mm0">
+<addon id="plugin.audio.jazzfm" version="0.1.1" name="Jazz FM" provider-name="t0mm0">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
-        <import addon="script.module.simplejson" version="2.0.10"/>
+        <import addon="script.module.beautifulsoup"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
         <provides>audio</provides>
     </extension>
-    <extension point= "xbmc.addon.metadata">
-        <summary>Access your Subsonic server</summary>
-        <description>Provides basic access to your Subsonic audio server.</description>
-        <disclaimer>You need a Subsonic server to connect to - check addon settings</disclaimer>
+    <extension point="xbmc.addon.metadata">
+        <summary>Listen to live stream and recoded shows from Jazz FM.</summary>
+        <description>Check out http://jazzfm.com</description>
         <platform>all</platform>
     </extension>
 </addon>
@@ -32,17 +31,18 @@
     </extension>
 </addon>
 
-<addon id="plugin.audio.jazzfm" version="0.1.1" name="Jazz FM" provider-name="t0mm0">
+<addon id="plugin.audio.subsonic" version="0.1.1" name="Subsonic" provider-name="t0mm0">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
-        <import addon="script.module.beautifulsoup"/>
+        <import addon="script.module.simplejson" version="2.0.10"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
         <provides>audio</provides>
     </extension>
-    <extension point="xbmc.addon.metadata">
-        <summary>Listen to live stream and recoded shows from Jazz FM.</summary>
-        <description>Check out http://jazzfm.com</description>
+    <extension point= "xbmc.addon.metadata">
+        <summary>Access your Subsonic server</summary>
+        <description>Provides basic access to your Subsonic audio server.</description>
+        <disclaimer>You need a Subsonic server to connect to - check addon settings</disclaimer>
         <platform>all</platform>
     </extension>
 </addon>

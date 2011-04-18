@@ -50,11 +50,14 @@ class Subsonic:
     def get_indexes(self, folder_id):
         Addon.logging.debug('get_indexes: ' + folder_id)
         payload = self.__get_json('getIndexes.view', {'musicFolderId': folder_id})
-        indexes = payload['indexes']['index']
-        index = []
-        [index.extend(i) for i in [i['artist'] for i in indexes]]
-        [Addon.add_artist(i) for i in index if type(i) is dict]
-        Addon.end_of_directory()
+        indexes = payload['indexes'].get('index', False)
+        if indexes:
+            index = []
+            [index.extend(i) for i in [i['artist'] for i in self.listify(indexes)]]
+            [Addon.add_artist(i) for i in index if type(i) is dict]
+            Addon.end_of_directory()
+        else:
+            Addon.show_dialog([Addon.get_string(30011)])
 
     def get_music_directory(self, music_id):
         Addon.logging.debug('get_music_directory: ' + music_id)

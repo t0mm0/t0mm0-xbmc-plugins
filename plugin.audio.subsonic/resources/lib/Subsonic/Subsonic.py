@@ -45,6 +45,9 @@ class Subsonic:
                 Addon.add_directory({'mode': 'list_indexes', 
                                      'folder_id': folder['id']}, 
                                     folder['name'], total_items=total)
+        Addon.add_directory({'mode': 'search'}, Addon.get_string(30006))
+        Addon.add_directory({'mode': 'list_playlists'}, Addon.get_string(30011))
+        Addon.add_directory({'mode': 'random'}, Addon.get_string(30012))
         Addon.end_of_directory()
 
     def get_indexes(self, folder_id):
@@ -89,7 +92,16 @@ class Subsonic:
         payload = self.__get_json('getPlaylist.view', {'id': playlist_id})
         songs = self.listify(payload['playlist']['entry'])
         self.display_music_directory(songs)
-    
+
+    def get_random(self, queries):
+        Addon.logging.debug('get_random: ' + str(queries))
+        payload = self.__get_json('getRandomSongs.view', queries)
+        if payload.get('randomSongs', False):
+            songs = self.listify(payload['randomSongs']['song'])
+            self.display_music_directory(songs)
+        else:
+            Addon.show_dialog([Addon.get_string(30010)])
+            
     def play(self, song_id):
         Addon.logging.debug('play: ' + song_id)
         if Addon.get_setting('transcode') == 'true':

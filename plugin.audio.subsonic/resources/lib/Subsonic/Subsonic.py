@@ -38,29 +38,36 @@ class Subsonic:
     def get_music_folders(self):
         Addon.logging.debug('get_music_folders')
         payload = self.__get_json('getMusicFolders.view')
-        folders = self.listify(payload['musicFolders']['musicFolder'])
-        total = len(folders)
-        for folder in folders:
-            if type(folder) is dict:
-                Addon.add_directory({'mode': 'list_indexes', 
-                                     'folder_id': folder['id']}, 
-                                    folder['name'], total_items=total)
-        Addon.end_of_directory()
+        if payload:
+            folders = self.listify(payload['musicFolders']['musicFolder'])
+            total = len(folders)
+            for folder in folders:
+                if type(folder) is dict:
+                    Addon.add_directory({'mode': 'list_indexes', 
+                                         'folder_id': folder['id']}, 
+                                        folder['name'], total_items=total)
+            Addon.add_directory({'mode': 'search'}, Addon.get_string(30006))
+            Addon.add_directory({'mode': 'list_playlists'}, 
+                                Addon.get_string(30011))
+            Addon.add_directory({'mode': 'random'}, Addon.get_string(30012))
+            Addon.end_of_directory()
 
     def get_indexes(self, folder_id):
         Addon.logging.debug('get_indexes: ' + folder_id)
         payload = self.__get_json('getIndexes.view', {'musicFolderId': folder_id})
-        indexes = payload['indexes']['index']
-        index = []
-        [index.extend(i) for i in [i['artist'] for i in indexes]]
-        [Addon.add_artist(i) for i in index if type(i) is dict]
-        Addon.end_of_directory()
+        if payload:
+            indexes = payload['indexes']['index']
+            index = []
+            [index.extend(i) for i in [i['artist'] for i in indexes]]
+            [Addon.add_artist(i) for i in index if type(i) is dict]
+            Addon.end_of_directory()
 
     def get_music_directory(self, music_id):
         Addon.logging.debug('get_music_directory: ' + music_id)
         payload = self.__get_json('getMusicDirectory.view', {'id': music_id})
-        songs = self.listify(payload['directory']['child'])
-        self.display_music_directory(songs)
+        if payload:
+            songs = self.listify(payload['directory']['child'])
+            self.display_music_directory(songs)
         
     def display_music_directory(self, songs):
         for song in songs: 
@@ -71,7 +78,38 @@ class Subsonic:
                 else:    
                     Addon.add_song(song, cover_art)
         Addon.end_of_directory()
+    
+    def get_playlists(self):
+        Addon.logging.debug('get_playlists')
+        payload = self.__get_json('getPlaylists.view')
+        if payload:
+            playlists = self.listify(payload['playlists'])
+            total = len(playlists)
+            for playlist in playlists:
+                if type(playlist) is dict:
+                    Addon.add_directory({'mode': 'playlist', 
+                                         'playlist_id': playlist['playlist']['id']}, 
+                                        playlist['playlist']['name'], 
+                                        total_items=total)
+            Addon.end_of_directory()
 
+    def get_playlist(self, playlist_id):
+        Addon.logging.debug('get_playlist: ' + playlist_id)
+        payload = self.__get_json('getPlaylist.view', {'id': playlist_id})
+        if payload:
+            songs = self.listify(payload['playlist']['entry'])
+            self.display_music_directory(songs)
+
+    def get_random(self, queries):
+        Addon.logging.debug('get_random: ' + str(queries))
+        payload = self.__get_json('getRandomSongs.view', queries)
+        if payload:
+            if payload.get('randomSongs', False):
+                songs = self.listify(payload['randomSongs']['song'])
+                self.display_music_directory(songs)
+            else:
+                Addon.show_dialog([Addon.get_string(30010)])
+            
     def play(self, song_id):
         Addon.logging.debug('play: ' + song_id)
         if Addon.get_setting('transcode') == 'true':
@@ -88,15 +126,16 @@ class Subsonic:
                    'songCount': 0}
         queries[search_mode + 'Count'] = 999
         payload = self.__get_json('search2.view', queries)        
-        if payload['searchResult2']:
-            items = self.listify(payload['searchResult2'][search_mode])
-            if search_mode == 'artist':
-                [Addon.add_artist(i) for i in items if type(i) is dict]
-                Addon.end_of_directory()
+        if payload:
+            if payload['searchResult2']:
+                items = self.listify(payload['searchResult2'][search_mode])
+                if search_mode == 'artist':
+                    [Addon.add_artist(i) for i in items if type(i) is dict]
+                    Addon.end_of_directory()
+                else:
+                    self.display_music_directory(items)
             else:
-                self.display_music_directory(items)
-        else:
-            Addon.show_dialog([Addon.get_string(30010)])
+                Addon.show_dialog([Addon.get_string(30010)])
 
     def get_cover_art_url(self, cover_art_id):
         url = ''

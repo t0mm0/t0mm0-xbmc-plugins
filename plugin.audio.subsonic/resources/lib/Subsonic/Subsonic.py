@@ -71,7 +71,25 @@ class Subsonic:
                 else:    
                     Addon.add_song(song, cover_art)
         Addon.end_of_directory()
+    
+    def get_playlists(self):
+        Addon.logging.debug('get_playlists')
+        payload = self.__get_json('getPlaylists.view')
+        playlists = self.listify(payload['playlists'])
+        total = len(playlists)
+        for playlist in playlists:
+            if type(playlist) is dict:
+                Addon.add_directory({'mode': 'playlist', 
+                                     'playlist_id': playlist['playlist']['id']}, 
+                                    playlist['playlist']['name'], total_items=total)
+        Addon.end_of_directory()
 
+    def get_playlist(self, playlist_id):
+        Addon.logging.debug('get_playlist: ' + playlist_id)
+        payload = self.__get_json('getPlaylist.view', {'id': playlist_id})
+        songs = self.listify(payload['playlist']['entry'])
+        self.display_music_directory(songs)
+    
     def play(self, song_id):
         Addon.logging.debug('play: ' + song_id)
         if Addon.get_setting('transcode') == 'true':

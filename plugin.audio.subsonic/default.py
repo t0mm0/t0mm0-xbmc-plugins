@@ -33,6 +33,10 @@ Addon.logging.debug('plugin handle: ' + str(Addon.plugin_handle))
 if subsonic.ping():
     if Addon.plugin_queries['mode'] == 'list_indexes': 
         subsonic.get_indexes(Addon.plugin_queries['folder_id'])
+    elif Addon.plugin_queries['mode'] == 'list_playlists': 
+        subsonic.get_playlists()
+    elif Addon.plugin_queries['mode'] == 'playlist': 
+        subsonic.get_playlist(Addon.plugin_queries['playlist_id'])
     elif Addon.plugin_queries['mode'] == 'get_music_directory': 
         subsonic.get_music_directory(Addon.plugin_queries['id'])
     elif Addon.plugin_queries['mode'] == 'play': 
@@ -58,6 +62,7 @@ if subsonic.ping():
         
     else:
         Addon.add_directory({'mode': 'search'}, Addon.get_string(30006))
+        Addon.add_directory({'mode': 'list_playlists'}, Addon.get_string(30011))
         subsonic.get_music_folders()
 else:
     Addon.show_settings()

@@ -16,6 +16,22 @@
     </extension>
 </addon>
 
+<addon id="plugin.audio.subsonic" version="0.2.0" name="Subsonic" provider-name="t0mm0">
+    <requires>
+        <import addon="xbmc.python" version="1.0"/>
+        <import addon="script.module.simplejson" version="2.0.10"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>audio</provides>
+    </extension>
+    <extension point= "xbmc.addon.metadata">
+        <summary>Access your Subsonic server</summary>
+        <description>Provides basic access to your Subsonic audio server.</description>
+        <disclaimer>You need a Subsonic server to connect to - check addon settings</disclaimer>
+        <platform>all</platform>
+    </extension>
+</addon>
+
 <addon id="plugin.video.veetle" version="0.1.3" name="Veetle" provider-name="t0mm0">
     <requires>
         <import addon="xbmc.python" version="1.0"/>

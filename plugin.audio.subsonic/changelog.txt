@@ -2,5 +2,8 @@
 - Add capability to play subsonic playlists
 - Add custom random playlists
 
+[B]Version 0.1.1[/B]
+- small fix for little or no content in subsonic
+
 [B]Version 0.1.0[/B]
 - Initial version

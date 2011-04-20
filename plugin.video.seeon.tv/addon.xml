@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="plugin.video.seeon.tv" version="0.1.0" name="seeon.tv" provider-name="t0mm0">
+    <requires>
+        <import addon="xbmc.python" version="1.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Live Video</summary>
+        <description>Live video from http://seeon.tv</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+

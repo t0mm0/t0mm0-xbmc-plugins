@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <setting id="quality" type="enum" label="30104" values="360p|480p" default="1" />
+	<setting type="sep" label="30102" />
+	<setting type="lsep" label="30102" />
+	<setting type="lsep" label="30103" />
+	<setting id="proxy" type="bool" label="30100" default="" />
+	<setting id="proxy_server" type="text" label="30101" default="" enable="eq(-1,true)" />
+</settings>

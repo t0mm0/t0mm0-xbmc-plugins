@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <string id="30000">Next</string>
+    <string id="30001">Originals</string>
+    <string id="30002">Movies</string>
+    <string id="30003">Television</string>
+    <string id="30004">Collections</string>
+    <string id="30005">All Genres</string>
+    <string id="30006">Action</string>
+    <string id="30007">Comedy</string>
+    <string id="30008">Crime</string>
+    <string id="30009">Thriller</string>
+    <string id="30010">Horror</string>
+    <string id="30011">Sci-Fi</string>
+    <string id="30012">All Media</string>
+    <string id="30013">Full Length</string>
+    <string id="30014">Minisodes</string>
+    <string id="30015">Clips</string>
+
+    <string id="30100">Enable Proxy</string>
+    <string id="30101">proxy.server:port</string>
+    <string id="30102">Proxy server is only used for fetching metadata</string>
+    <string id="30103">Media is played directly.</string>
+    <string id="30104">Quality</string>
+</strings>

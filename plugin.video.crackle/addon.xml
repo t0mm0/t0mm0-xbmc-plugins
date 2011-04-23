@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="plugin.video.crackle" version="0.1.0" name="Crackle" provider-name="t0mm0">
+    <requires>
+        <import addon="xbmc.python" version="1.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Play movies and TV shows from Crackle.com</summary>
+        <description>Crackle is the place to experience pure entertainment: full-length movies, TV shows, and original series from genres that embody cool -- all uncut, uncensored, and unbelievably free. Well, that's what the PR waffle says anyway ;-)</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <setting id="quality" type="enum" label="30100" values="400kbps|750kbps|1024kbps" default="2" />
+</settings>

@@ -16,13 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 import Addon
+import cookielib
+import os
 import re
-import urllib2
+import urllib, urllib2
 
 class Ustvnow:
     __BASE_URL = 'http://ustvnow.com'
     __BASE_VIDEO_URL = 'ustvnow.com'
     __BASE_IMAGE_URL = 'http://lv2.ustvnow.com/ustvnow/images'
+    __LOGIN_URL = __BASE_URL + '/cgi-bin/oc/manage.cgi'
     __LOGOS = {'ABC': 'WHTM.png',
                'CBS': 'WHP.png',
                'CW': 'WLYH.png',
@@ -48,10 +51,11 @@ class Ustvnow:
                'TNT': 'TNT.png',
                'USA': 'USA.png',
                }
-    def __init__(self):
-        self.proxy = ''
-        pass
-        
+    def __init__(self, user, password, cookie_file):
+        self.user = user
+        self.password = password
+        self.cookie_file = cookie_file
+                    
     def get_categories(self):
         return None
 
@@ -71,45 +75,81 @@ class Ustvnow:
         for channel in re.finditer('class=\'chnl\'.+?playVideo\("(.+?)",.*?"(.+?)",.*?"(.+?)",.*?"(.+?)",.*?"(.+?)",.*?"(.+?)".+?title=\'(.+?)\'.+?class=\'play\'>(.+?)<\/a>(.+?)<\/div>',
                                    html, re.DOTALL):
             c = channel.groups()
-            u = c[2].split(':')
-            if u[0].find('.') > -1:
-                url = 'rtmp://%s/%s/%s%d' % (u[0], u[1], c[1], 1)
-            else:
-                url = 'rtmp://%s.ustvnow.com/%s/%s%d' % (u[0], u[1], c[1], quality)
+            server, app = c[2].split(':')
             now = {'time': c[6], 'title': c[7], 'plot': c[8]}
             icon = '%s/%s' % (self.__BASE_IMAGE_URL, self.__LOGOS.get(c[4], ''))    
-            channels.append({'name': c[4], 'stream_url': url, 
+            channels.append({'name': c[4], 'stream': c[1], 
+                           'server': server, 'app': app, 
                            'icon': icon, 'now': now})
-        return channels
-        
+        return channels        
 
     def get_videos(self):
         return None
         
-    def resolve_stream(self, channel, quality=350):
-        return None
+    def resolve_stream(self, server, app, channel, quality=2, stream_type='rtmp'):
+        Addon.log('resolving stream: ' + channel)
+        self.__login()
+        stream_name = self.__get_html('getencstreamname.php', {'sname': channel})
+        if server.find('.') > -1:
+            url = '%s://%s:1935/%s/%s%d' % \
+                        (stream_type, server, app, stream_name, int(quality))
+        else:
+            url = '%s://%s.ustvnow.com:1935/%s/%s%d' % \
+                        (stream_type, server, app, stream_name, int(quality))
+        Addon.log('resolved to: ' + url)
+        return url
 
     def __build_url(self, path, queries={}):
         query = Addon.build_query(queries)
         return '%s/%s?%s' % (self.__BASE_URL, path, query) 
 
-    def __get_html(self, path, queries={}, use_proxy=False):
-        html = False
-        url = self.__build_url(path, queries)
-
-        if use_proxy and self.proxy:
-            p = urllib2.ProxyHandler({'http': self.proxy})
-            download = urllib2.build_opener(p).open
-            Addon.log('getting with proxy: ' + url)
+    def __fetch(self, url, form_data=False):
+        if form_data:
+            Addon.log('posting: %s %s' % (url, str(form_data)))
+            req = urllib2.Request(url, form_data)
         else:
-            download = urllib2.urlopen
             Addon.log('getting: ' + url)
-
+            req = url
+        response = urllib2.urlopen(req)
         try:
-            response = download(url)
-            html = response.read()
-            return html
+            response = urllib2.urlopen(url)
+            return response
         except urllib2.URLError, e:
             Addon.log(str(e), True)
             return False
+        
+    def __get_html(self, path, queries={}):
+        html = False
+        url = self.__build_url(path, queries)
+
+        response = self.__fetch(url)
+        if response:
+            html = response.read()
+        else:
+            html = False
+        
+        return html
+
+    def __login(self):
+        Addon.log('logging in')
+        policy = cookielib.DefaultCookiePolicy(rfc2965=True, strict_rfc2965_unverifiable=False)    
+        self.cj = cookielib.MozillaCookieJar(self.cookie_file)
+        self.cj.set_policy(policy)
+
+        if os.access(self.cookie_file, os.F_OK):
+            self.cj.load(ignore_discard=True)
+
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
+        urllib2.install_opener(opener)
+        self.cj.clear_session_cookies()
+        
+        url = self.__build_url('cgi-bin/oc/manage.cgi')
+        form_data = urllib.urlencode({'a': 'do_login', 
+                                      'force_direct': '0',
+                                      'manage_proper': '1',
+                                      'input_username': self.user,
+                                      'input_password': self.password
+                                      })
+        response = self.__fetch(self.__LOGIN_URL, form_data)
+        self.cj.save(ignore_discard=True)
 

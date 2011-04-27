@@ -18,17 +18,16 @@
 
 from resources.lib import Addon, ustvnow 
 import sys
-import xbmcgui, xbmcplugin
+import xbmc, xbmcgui, xbmcplugin
 
 Addon.plugin_url = sys.argv[0]
 Addon.plugin_handle = int(sys.argv[1])
 Addon.plugin_queries = Addon.parse_query(sys.argv[2][1:])
 
-proxy = ''
-if Addon.get_setting('proxy') == 'true':
-    proxy = Addon.get_setting('proxy_server')
-
-ustv = ustvnow.Ustvnow()
+email = Addon.get_setting('email')
+password = Addon.get_setting('password')
+cookie_file = xbmc.translatePath('special://temp/ustvnow.cookies')
+ustv = ustvnow.Ustvnow(email, password, cookie_file)
 
 Addon.log('plugin url: ' + Addon.plugin_url)
 Addon.log('plugin queries: ' + str(Addon.plugin_queries))
@@ -39,13 +38,27 @@ play = Addon.plugin_queries['play']
 
 if play:
     Addon.log('play ' + play)
+    stream_type = ['rtmp', 'rtsp'][int(Addon.get_setting('stream_type'))]
+    q = Addon.parse_query(play,False)
+    stream_url = ustv.resolve_stream(q['server'], 
+                                     q['app'], 
+                                     q['stream'],
+                                     quality=Addon.get_setting('quality'),
+                                     stream_type=stream_type)
+    xbmcplugin.setResolvedUrl(Addon.plugin_handle, True, 
+                              xbmcgui.ListItem(path=stream_url))
     
-if mode == 'main':
+elif mode == 'main':
     Addon.log(mode)
     channels = ustv.get_channels(int(Addon.get_setting('quality')) + 1)
     for c in channels:
-        Addon.add_video_item(c['stream_url'],
-                             {'title': '%s - %s: %s' % (c['name'], c['now']['time'], c['now']['title']),
+        url = Addon.build_query({'server': c['server'],
+                                'app': c['app'],
+                                'stream': c['stream']})
+        Addon.add_video_item(url,
+                             {'title': '%s - %s: %s' % (c['name'], 
+                                                        c['now']['time'], 
+                                                        c['now']['title']),
                               'plot': c['now']['plot'],
                              },
                              img=c['icon'])

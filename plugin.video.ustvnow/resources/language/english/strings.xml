@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
     <string id="30100">Quality</string>
+    <string id="30101">Stream Type</string>
+    <string id="30102">Email</string>
+    <string id="30103">Password</string>
 </strings>

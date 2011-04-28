@@ -28,8 +28,8 @@ subsonic = Subsonic.Subsonic(Addon.get_setting('server'),
                              Addon.get_setting('user'), 
                              Addon.get_setting('password'))
 
-Addon.logging.debug('plugin queries: ' + str(Addon.plugin_queries))
-Addon.logging.debug('plugin handle: ' + str(Addon.plugin_handle))
+Addon.log('plugin queries: ' + str(Addon.plugin_queries))
+Addon.log('plugin handle: ' + str(Addon.plugin_handle))
 
 if subsonic.ping():
     if Addon.plugin_queries['mode'] == 'list_indexes': 

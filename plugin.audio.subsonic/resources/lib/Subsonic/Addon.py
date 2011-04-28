@@ -17,11 +17,16 @@
 '''
 
 import cgi
-import logging
 import re
 import sys
 import urllib
 import xbmc, xbmcaddon, xbmcgui, xbmcplugin
+
+def log(msg, err=False):
+    if err:
+        xbmc.log(addon.getAddonInfo('name') + ': ' + msg, xbmc.LOGERROR)    
+    else:
+        xbmc.output(addon.getAddonInfo('name') + ': ' + msg, xbmc.LOGDEBUG)    
 
 def show_error(details):
     show_dialog(details, get_string(30000), True)
@@ -32,10 +37,7 @@ def show_dialog(details, title='Subsonic', is_error=False):
     for k, v in enumerate(details):
         error[k] = v
         text += v + ' '
-    if is_error:    
-        logging.error(text)
-    else:
-        logging.debug(text)
+    log(text, is_error)
     dialog = xbmcgui.Dialog()
     ok = dialog.ok(title, error[0], error[1], error[2])
     
@@ -45,22 +47,26 @@ def get_setting(setting):
 def get_string(string_id):
     return addon.getLocalizedString(string_id)   
 
-def add_music_item(item_id, infolabels, img='', total_items=0):
+def add_music_item(item_id, infolabels, img='', fanart='', total_items=0):
     infolabels = decode_dict(infolabels)
     url = build_plugin_url({'mode': 'play',
                             'id': item_id})
-    logging.debug('adding item: %s - %s' % (infolabels['title'], url))
+    log('adding item: %s - %s' % (infolabels['title'], url))
     listitem = xbmcgui.ListItem(infolabels['title'], iconImage=img, 
                                 thumbnailImage=img)
     listitem.setInfo('music', infolabels)
     listitem.setProperty('IsPlayable', 'true')
+    listitem.setProperty('fanart_image', fanart)
     xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
                                 isFolder=False, totalItems=total_items)
 
-def add_directory(url_queries, title, img='', total_items=0):
+def add_directory(url_queries, title, img='', fanart='', total_items=0):
     url = build_plugin_url(url_queries)
-    logging.debug('adding dir: %s - %s' % (title, url))
+    log('adding dir: %s - %s' % (title, url))
     listitem = xbmcgui.ListItem(decode(title), iconImage=img, thumbnailImage=img)
+    if not fanart:
+        fanart = addon.getAddonInfo('path') + '/fanart.jpg'
+    listitem.setProperty('fanart_image', fanart)
     xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
                                 isFolder=True, totalItems=total_items)
 
@@ -79,7 +85,7 @@ def add_song(song, img='', total_items=0):
     year = song.get('year', None)
     if year:
         infolabels['year'] = year
-    add_music_item(song['id'], infolabels, img, total_items)
+    add_music_item(song['id'], infolabels, img, total_items=total_items)
 
 def add_album(album, img='', total_items=0):
     infolabels = {'title': unicode(album.get('title', get_string(30003))),
@@ -130,7 +136,7 @@ def _callback(matches):
         return id
 
 def decode(data):
-    return re.sub("&#(\d+)(;|(?=\s))", _callback, data)
+    return re.sub("&#(\d+)(;|(?=\s))", _callback, data).strip()
 
 def decode_dict(data):
     for k, v in data.items():
@@ -138,15 +144,6 @@ def decode_dict(data):
             data[k] = decode(v)
     return data
 
-addon = xbmcaddon.Addon(id='plugin.audio.subsonic')
-
-if get_setting('debug') == 'true':
-    level = logging.DEBUG
-else:
-    level = logging.ERROR
-logging.basicConfig(
-    stream=sys.stdout,
-    level=level,
-    format='Subsonic: %(levelname)s %(message)s',
-    )
+addon = xbmcaddon.Addon(id='plugin.video.subsonic')
+plugin_path = addon.getAddonInfo('path')
 

@@ -1,3 +1,7 @@
+[B]Version 0.2.2[/B]
+- fix silly cut and paste error causing script errors on some xbmc versions
+- reduce api requirement to 1.4.0 (allows subsonic 4.2 servers)
+
 [B]Version 0.2.1[/B]
 - Fix bug when there was more than one playlist (doh!)
 - rejig debugging so no need for specific debug setting for this addon

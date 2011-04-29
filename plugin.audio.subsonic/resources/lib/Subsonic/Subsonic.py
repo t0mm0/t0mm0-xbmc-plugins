@@ -27,7 +27,7 @@ class Subsonic:
         self.server = server
         self.user = user
         self.password = password
-        self.api_version = '1.5.0'
+        self.api_version = '1.4.0'
         self.client_name='xbmc'
         
     def ping(self):

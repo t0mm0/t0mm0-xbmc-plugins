@@ -33,9 +33,11 @@ except:
 
 def log(msg, err=False):
     if err:
-        xbmc.log(addon.getAddonInfo('name') + ': ' + msg, xbmc.LOGERROR)    
+        xbmc.log(addon.getAddonInfo('name') + ': ' + msg.encode('utf-8'), 
+                 xbmc.LOGERROR)    
     else:
-        xbmc.output(addon.getAddonInfo('name') + ': ' + msg, xbmc.LOGDEBUG)    
+        xbmc.output(addon.getAddonInfo('name') + ': ' + msg.encode('utf-8'), 
+                    xbmc.LOGDEBUG)    
 
 def show_error(details):
     show_dialog(details, get_string(30000), True)
@@ -72,7 +74,7 @@ def add_video_item(url, infolabels, img='', fanart='', total_items=0):
     infolabels = decode_dict(infolabels)
     if url.find('://') == -1:
         url = build_plugin_url({'play': url})
-    log('adding item: %s - %s' % (infolabels['title'].encode('ascii','ignore'), url))
+    log('adding item: %s - %s' % (infolabels['title'].decode('utf-8','ignore'), url))
     listitem = xbmcgui.ListItem(infolabels['title'], iconImage=img, 
                                 thumbnailImage=img)
     listitem.setInfo('video', infolabels)

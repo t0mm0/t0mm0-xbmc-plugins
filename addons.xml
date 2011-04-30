@@ -86,7 +86,7 @@
     </extension>
 </addon>
 
-<addon id="plugin.audio.subsonic" version="0.2.2" name="Subsonic" provider-name="t0mm0">
+<addon id="plugin.audio.subsonic" version="0.2.3" name="Subsonic" provider-name="t0mm0">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
         <import addon="script.module.simplejson" version="2.0.10"/>

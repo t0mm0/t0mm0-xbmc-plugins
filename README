@@ -12,6 +12,7 @@ Contents:
  - seeon.tv (Plays live streams from seeon.tv)
  - crackle (Plays movies and tv shows from crackle.com)
  - ustvnow (Basic live stream support for ustvnow.com)
- 
+ - freedocast (plays live streams and recordings from freedocast.com)
+
 contact:
  dev (at) onairsoftware.co.uk

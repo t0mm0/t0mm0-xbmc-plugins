@@ -43,7 +43,7 @@ if play:
     stream_url = ustv.resolve_stream(q['server'], 
                                      q['app'], 
                                      q['stream'],
-                                     quality=Addon.get_setting('quality'),
+                                     quality=int(Addon.get_setting('quality')) + 1,
                                      stream_type=stream_type)
     xbmcplugin.setResolvedUrl(Addon.plugin_handle, True, 
                               xbmcgui.ListItem(path=stream_url))

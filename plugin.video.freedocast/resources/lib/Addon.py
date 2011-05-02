@@ -1,5 +1,5 @@
 '''
-    Subsonic XBMC Plugin
+    freedocast XBMC Plugin
     Copyright (C) 2011 t0mm0
 
     This program is free software: you can redistribute it and/or modify
@@ -17,10 +17,19 @@
 '''
 
 import cgi
+import os.path
+import pickle
 import re
 import sys
+import time
 import urllib
-import xbmc, xbmcaddon, xbmcgui, xbmcplugin
+
+try:
+    import xbmc, xbmcaddon, xbmcgui, xbmcplugin
+    is_xbmc = True
+except:
+    is_xbmc = False
+    print 'not running on xbmc'
 
 def log(msg, err=False):
     if err:
@@ -33,7 +42,7 @@ def log(msg, err=False):
 def show_error(details):
     show_dialog(details, get_string(30000), True)
 
-def show_dialog(details, title='Subsonic', is_error=False):
+def show_dialog(details, title='freedocast', is_error=False):
     error = ['', '', '']
     text = ''
     for k, v in enumerate(details):
@@ -51,12 +60,24 @@ def get_string(string_id):
 
 def add_music_item(item_id, infolabels, img='', fanart='', total_items=0):
     infolabels = decode_dict(infolabels)
-    url = build_plugin_url({'mode': 'play',
-                            'id': item_id})
+    url = build_plugin_url({'play': item_id})
     log('adding item: %s - %s' % (infolabels['title'], url))
     listitem = xbmcgui.ListItem(infolabels['title'], iconImage=img, 
                                 thumbnailImage=img)
     listitem.setInfo('music', infolabels)
+    listitem.setProperty('IsPlayable', 'true')
+    listitem.setProperty('fanart_image',fanart)
+    xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
+                                isFolder=False, totalItems=total_items)
+
+def add_video_item(url, infolabels, img='', fanart='', total_items=0):
+    infolabels = decode_dict(infolabels)
+    if url.find('://') == -1:
+        url = build_plugin_url({'play': url})
+    log('adding item: %s - %s' % (infolabels['title'].decode('utf-8','ignore'), url))
+    listitem = xbmcgui.ListItem(infolabels['title'], iconImage=img, 
+                                thumbnailImage=img)
+    listitem.setInfo('video', infolabels)
     listitem.setProperty('IsPlayable', 'true')
     listitem.setProperty('fanart_image', fanart)
     xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
@@ -74,7 +95,7 @@ def add_directory(url_queries, title, img='', fanart='', total_items=0):
 
 def add_artist(artist, total_items=0):
     url_queries = {'mode': 'get_music_directory', 'id': artist['id']}
-    add_directory(url_queries, unicode(artist['name']), total_items=total_items) 
+    add_directory(url_queries, artist['name'], total_items=total_items) 
 
 def add_song(song, img='', total_items=0):
     infolabels = {'title': unicode(song.get('title', get_string(30003))),
@@ -87,7 +108,7 @@ def add_song(song, img='', total_items=0):
     year = song.get('year', None)
     if year:
         infolabels['year'] = year
-    add_music_item(song['id'], infolabels, img, total_items=total_items)
+    add_music_item(song['id'], infolabels, img, total_items)
 
 def add_album(album, img='', total_items=0):
     infolabels = {'title': unicode(album.get('title', get_string(30003))),
@@ -97,9 +118,14 @@ def add_album(album, img='', total_items=0):
                   album['title'], img, total_items)
 
 def resolve_url(stream_url):
-    xbmcplugin.setResolvedUrl(plugin_handle, True, 
-                              xbmcgui.ListItem(path=stream_url))
-
+    if stream_url:
+        xbmcplugin.setResolvedUrl(plugin_handle, True, 
+                                  xbmcgui.ListItem(path=stream_url))
+    else:
+        show_error([get_string(30002)])
+        xbmcplugin.setResolvedUrl(plugin_handle, False, 
+                                  xbmcgui.ListItem())
+        
 def end_of_directory():
     xbmcplugin.endOfDirectory(plugin_handle)
 
@@ -110,12 +136,14 @@ def build_plugin_url(queries):
     url = plugin_url + '?' + build_query(queries)
     return url
 
-def parse_query(query):
+def parse_query(query, clean=True):
     queries = cgi.parse_qs(query)
     q = {}
     for key, value in queries.items():
         q[key] = value[0]
-    q['mode'] = q.get('mode', 'main')
+    if clean:
+        q['mode'] = q.get('mode', 'main')
+        q['play'] = q.get('play', '')
     return q
 
 def show_settings():
@@ -146,6 +174,7 @@ def decode_dict(data):
             data[k] = decode(v)
     return data
 
-addon = xbmcaddon.Addon(id='plugin.audio.subsonic')
-plugin_path = addon.getAddonInfo('path')
+if is_xbmc:
+    addon = xbmcaddon.Addon(id='plugin.video.freedocast')
+    plugin_path = addon.getAddonInfo('path')
 

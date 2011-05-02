@@ -36,12 +36,23 @@ play = Addon.plugin_queries['play']
 if play:
     Addon.log('play ' + play)
     stream_url = freedo.resolve_stream(play)
-    xbmcplugin.setResolvedUrl(Addon.plugin_handle, True, 
-                              xbmcgui.ListItem(path=stream_url))
+    Addon.resolve_url(stream_url)
     
 elif mode == 'main':
     Addon.log(mode)
-    
+    Addon.add_directory({'mode': 'list_live'}, Addon.get_string(30000))
+    Addon.add_directory({'mode': 'list_vid'}, Addon.get_string(30001))
+
+elif mode == 'list_live':
+    pn = int(Addon.plugin_queries.get('pn', 1))
+    Addon.log('mode: %s page: %d' % (mode, pn))
+    channels = freedo.get_channels(pn)
+    for c in channels['channels']:
+        Addon.add_video_item(c['id'], {'title': c['name']}, img=c['img'])
+    if channels['more']:
+        Addon.add_directory({'mode': 'list_live',
+                             'pn': pn + 1}, Addon.get_string(30003))
+        
 Addon.end_of_directory()
         
 

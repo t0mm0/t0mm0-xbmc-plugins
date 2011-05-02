@@ -36,8 +36,18 @@ class Freedocast:
     def get_types(self, cat_id):
         return None
 
-    def get_channels(self, quality):
-        return None        
+    def get_channels(self, pn):
+        channels = {'more': False, 'channels': []}
+        list_page = self.__get_html('liveusers.aspx', queries={'pn': pn}, referer=self.__BASE_URL)
+        for c in re.finditer('imgcont.+?href="(.+?)".+?src="(.+?)" alt="(.+?)"',
+                             list_page, re.DOTALL):
+            url, img, name = c.groups()
+            channels['channels'].append({'id': url.split('/')[-1], 
+                                         'img': img, 
+                                         'name': name})
+        if list_page.find('class=\'page_next\'') > -1:
+            channels['more'] = True
+        return channels
 
     def get_videos(self):
         return None
@@ -47,11 +57,16 @@ class Freedocast:
         chan_page = self.__get_html(url)
         watch_url = re.search('id="player" src="(.+?)"', chan_page).group(1)
         watch_page = self.__get_html(watch_url, referer=self.__build_url(url))
-        play, streamer = re.search('file=(.+?)&streamer=(.+?)&', watch_page).groups()
-        app = '/'.join(streamer.split('/')[3:])
-        resolved = '%s app=%s playpath=%s pageurl=%s' % \
-                   (streamer, app, play, self.__build_url(watch_url))
-        Addon.log('resolved to: %s' % resolved)
+        s = re.search('file=(.+?)&streamer=(.+?)&', watch_page)
+        print s
+        if s:
+            play, streamer = s.groups()
+            app = '/'.join(streamer.split('/')[3:])
+            resolved = '%s app=%s playpath=%s pageurl=%s' % \
+                       (streamer, app, play, self.__build_url(watch_url))
+            Addon.log('resolved to: %s' % resolved)
+        else:
+            resolved = False
         return resolved
         
     def __build_url(self, url, queries={}):
@@ -93,27 +108,4 @@ class Freedocast:
             html = False
         
         return html
-
-    def __login(self):
-        Addon.log('logging in')
-        policy = cookielib.DefaultCookiePolicy(rfc2965=True, strict_rfc2965_unverifiable=False)    
-        self.cj = cookielib.MozillaCookieJar(self.cookie_file)
-        self.cj.set_policy(policy)
-
-        if os.access(self.cookie_file, os.F_OK):
-            self.cj.load(ignore_discard=True)
-
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
-        urllib2.install_opener(opener)
-        self.cj.clear_session_cookies()
-        
-        url = self.__build_url('cgi-bin/oc/manage.cgi')
-        form_data = urllib.urlencode({'a': 'do_login', 
-                                      'force_direct': '0',
-                                      'manage_proper': '1',
-                                      'input_username': self.user,
-                                      'input_password': self.password
-                                      })
-        response = self.__fetch(self.__LOGIN_URL, form_data)
-        self.cj.save(ignore_discard=True)
 

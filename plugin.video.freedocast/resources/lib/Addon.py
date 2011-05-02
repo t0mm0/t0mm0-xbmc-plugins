@@ -118,9 +118,14 @@ def add_album(album, img='', total_items=0):
                   album['title'], img, total_items)
 
 def resolve_url(stream_url):
-    xbmcplugin.setResolvedUrl(plugin_handle, True, 
-                              xbmcgui.ListItem(path=stream_url))
-
+    if stream_url:
+        xbmcplugin.setResolvedUrl(plugin_handle, True, 
+                                  xbmcgui.ListItem(path=stream_url))
+    else:
+        show_error([get_string(30002)])
+        xbmcplugin.setResolvedUrl(plugin_handle, False, 
+                                  xbmcgui.ListItem())
+        
 def end_of_directory():
     xbmcplugin.endOfDirectory(plugin_handle)
 

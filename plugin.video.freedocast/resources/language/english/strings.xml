@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <string id="30000">Live</string>
+    <string id="30001">Recorded</string>
+    <string id="30002">Could not resolve url</string>
+    <string id="30003">Next</string>
+</strings>

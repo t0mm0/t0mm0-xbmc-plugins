@@ -24,9 +24,11 @@ import xbmc, xbmcaddon, xbmcgui, xbmcplugin
 
 def log(msg, err=False):
     if err:
-        xbmc.log(addon.getAddonInfo('name') + ': ' + msg, xbmc.LOGERROR)    
+        xbmc.log(addon.getAddonInfo('name') + ': ' + msg.encode('utf-8'), 
+                 xbmc.LOGERROR)    
     else:
-        xbmc.output(addon.getAddonInfo('name') + ': ' + msg, xbmc.LOGDEBUG)    
+        xbmc.output(addon.getAddonInfo('name') + ': ' + msg.encode('utf-8'), 
+                    xbmc.LOGDEBUG)    
 
 def show_error(details):
     show_dialog(details, get_string(30000), True)
@@ -72,7 +74,7 @@ def add_directory(url_queries, title, img='', fanart='', total_items=0):
 
 def add_artist(artist, total_items=0):
     url_queries = {'mode': 'get_music_directory', 'id': artist['id']}
-    add_directory(url_queries, artist['name'], total_items=total_items) 
+    add_directory(url_queries, unicode(artist['name']), total_items=total_items) 
 
 def add_song(song, img='', total_items=0):
     infolabels = {'title': unicode(song.get('title', get_string(30003))),

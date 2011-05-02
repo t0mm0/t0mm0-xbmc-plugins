@@ -24,6 +24,7 @@ import urllib, urllib2
 class Ustvnow:
     __BASE_URL = 'http://ustvnow.com'
     __BASE_VIDEO_URL = 'ustvnow.com'
+    __BASE_DVR_URL = 'dvr1.ustvnow.com:1935/dvrrokuplay'
     __BASE_IMAGE_URL = 'http://lv2.ustvnow.com/ustvnow/images'
     __LOGIN_URL = __BASE_URL + '/cgi-bin/oc/manage.cgi'
     __LOGOS = {'ABC': 'WHTM.png',
@@ -65,7 +66,7 @@ class Ustvnow:
     def get_types(self, cat_id):
         return None
 
-    def get_channels(self, quality):
+    def get_channels(self):
         html = self.__get_html('callback.php', {'tab': 'showliveguide', 
                                                 'subid': 7, 
                                                 'layout': 'compact',
@@ -83,19 +84,37 @@ class Ustvnow:
                            'icon': icon, 'now': now})
         return channels        
 
-    def get_videos(self):
-        return None
+    def get_recordings(self, quality=1, stream_type='rtmp'):
+        html = self.__get_html('callback.php', {'tab': 'showcustomerrecordings',
+                                                'username': self.user,
+                                                })
+        recordings = []
+        for r in re.finditer('<td class="center">(.+?)<\/td>.+?playVideo\(".+?","(.+?)".+?play\'>(.+?)<\/a><\/strong>(.+?)<\/td>.*?<td>(.+?)<\/td>.*?>(.+?)<\/td>.*?<td>(.+?)<\/td>.*?<\/tr>', html, re.DOTALL):
+            chan, filename, title, plot, rec_date, duration, expires = r.groups()
+            url = '%s://%s/%s_%s.mp4' % (stream_type,
+                                       self.__BASE_DVR_URL,
+                                       filename,
+                                       ['350', '650', '950'][quality])
+            recordings.append({'channel': chan,
+                               'stream_url': url,
+                               'title': title,
+                               'plot': plot,
+                               'rec_date': rec_date,
+                               'duration': duration,
+                               'expires': expires,
+                               })
+        return recordings
         
-    def resolve_stream(self, server, app, channel, quality=2, stream_type='rtmp'):
+    def resolve_stream(self, server, app, channel, quality=1, stream_type='rtmp'):
         Addon.log('resolving stream: ' + channel)
         self.__login()
         stream_name = self.__get_html('getencstreamname.php', {'sname': channel})
         if server.find('.') > -1:
             url = '%s://%s:1935/%s/%s%d' % \
-                        (stream_type, server, app, stream_name, int(quality))
+                        (stream_type, server, app, stream_name, int(quality) + 1)
         else:
             url = '%s://%s.ustvnow.com:1935/%s/%s%d' % \
-                        (stream_type, server, app, stream_name, int(quality))
+                        (stream_type, server, app, stream_name, int(quality) + 1)
         Addon.log('resolved to: ' + url)
         return url
 

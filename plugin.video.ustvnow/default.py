@@ -43,14 +43,19 @@ if play:
     stream_url = ustv.resolve_stream(q['server'], 
                                      q['app'], 
                                      q['stream'],
-                                     quality=int(Addon.get_setting('quality')) + 1,
+                                     quality=int(Addon.get_setting('quality')),
                                      stream_type=stream_type)
     xbmcplugin.setResolvedUrl(Addon.plugin_handle, True, 
                               xbmcgui.ListItem(path=stream_url))
     
 elif mode == 'main':
     Addon.log(mode)
-    channels = ustv.get_channels(int(Addon.get_setting('quality')) + 1)
+    Addon.add_directory({'mode': 'live'}, Addon.get_string(30001))
+    Addon.add_directory({'mode': 'recordings'}, Addon.get_string(30002))
+
+elif mode == 'live':
+    Addon.log(mode)
+    channels = ustv.get_channels()
     for c in channels:
         url = Addon.build_query({'server': c['server'],
                                 'app': c['app'],
@@ -62,6 +67,18 @@ elif mode == 'main':
                               'plot': c['now']['plot'],
                              },
                              img=c['icon'])
+
+elif mode == 'recordings':
+    Addon.log(mode)
+    stream_type = ['rtmp', 'rtsp'][int(Addon.get_setting('stream_type'))]
+    recordings = ustv.get_recordings(int(Addon.get_setting('quality')), 
+                                     stream_type)
+    for r in recordings:
+        title = '%s (%s: %s)' % (r['title'], r['channel'], r['rec_date'])
+        plot = '%s\n\nChannel: %s\nRecorded: %s\nduration: %s\nexpires: %s' % \
+               (r['plot'], r['channel'], r['rec_date'], r['duration'], 
+                r['expires'])
+        Addon.add_video_item(r['stream_url'], {'title': title, 'plot': plot})
     
 Addon.end_of_directory()
         

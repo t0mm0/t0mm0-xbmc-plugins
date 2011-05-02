@@ -23,6 +23,8 @@ import urllib, urllib2
 
 class Freedocast:
     __BASE_URL = 'http://freedocast.com'
+    __BASE_IMAGE_URL = 'http://video3.letssync.com/lbvideos/'
+    __BASE_VIDEO_URL = 'http://video3.letssync.com/lbvideos/'
 
     def __init__(self):
         pass
@@ -36,7 +38,7 @@ class Freedocast:
     def get_types(self, cat_id):
         return None
 
-    def get_channels(self, pn):
+    def get_channels(self, pn=1):
         channels = {'more': False, 'channels': []}
         list_page = self.__get_html('liveusers.aspx', queries={'pn': pn}, referer=self.__BASE_URL)
         for c in re.finditer('imgcont.+?href="(.+?)".+?src="(.+?)" alt="(.+?)"',
@@ -49,8 +51,20 @@ class Freedocast:
             channels['more'] = True
         return channels
 
-    def get_videos(self):
-        return None
+    def get_videos(self, pn=1):
+        videos = {'more': False, 'videos': []}
+        list_page = self.__get_html('videos.aspx', queries={'pn': pn})
+        for v in re.finditer('lbvideos\/(.+?).jpg.+?target="_top">(.+?)<\/a>', 
+                             list_page, re.DOTALL):
+            v_id, name = v.groups()
+            img = '%s/%s.jpg' % (self.__BASE_IMAGE_URL, v_id)
+            stream_url = '%s/%s.flv' % (self.__BASE_VIDEO_URL, v_id)
+            videos['videos'].append({'img': img, 
+                                     'stream_url': stream_url, 
+                                     'name': name})
+        if list_page.find('class=\'page_next\'') > -1:
+            videos['more'] = True
+        return videos
         
     def resolve_stream(self, url):
         Addon.log('resolving: %s' % url)

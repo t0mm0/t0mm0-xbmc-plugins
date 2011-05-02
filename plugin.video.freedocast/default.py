@@ -53,6 +53,18 @@ elif mode == 'list_live':
         Addon.add_directory({'mode': 'list_live',
                              'pn': pn + 1}, Addon.get_string(30003))
         
+elif mode == 'list_vid':
+    pn = int(Addon.plugin_queries.get('pn', 1))
+    Addon.log('mode: %s page: %d' % (mode, pn))
+    videos = freedo.get_videos(pn)
+    for v in videos['videos']:
+        Addon.add_video_item(v['stream_url'], 
+                             {'title': v['name']}, 
+                             img=v['img'])
+    if videos['more']:
+        Addon.add_directory({'mode': 'list_vid',
+                             'pn': pn + 1}, Addon.get_string(30003))
+        
 Addon.end_of_directory()
         
 

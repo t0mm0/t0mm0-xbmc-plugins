@@ -67,17 +67,27 @@ class Freedocast:
         return videos
         
     def resolve_stream(self, url):
-        Addon.log('resolving: %s' % url)
+        Addon.log('resolving stream: %s' % url)
         chan_page = self.__get_html(url)
         watch_url = re.search('id="player" src="(.+?)"', chan_page).group(1)
         watch_page = self.__get_html(watch_url, referer=self.__build_url(url))
         s = re.search('file=(.+?)&streamer=(.+?)&', watch_page)
-        print s
         if s:
             play, streamer = s.groups()
             app = '/'.join(streamer.split('/')[3:])
             resolved = '%s app=%s playpath=%s pageurl=%s' % \
                        (streamer, app, play, self.__build_url(watch_url))
+            Addon.log('resolved to: %s' % resolved)
+        else:
+            resolved = False
+        return resolved
+
+    def resolve_video(self, v_id):
+        Addon.log('resolving video: %s' % v_id)
+        xml = self.__get_html('PlaylistXml.aspx', {'vid': v_id})
+        s = re.search('url="(.+?)"', xml)
+        if s:
+            resolved = s.group(1)
             Addon.log('resolved to: %s' % resolved)
         else:
             resolved = False

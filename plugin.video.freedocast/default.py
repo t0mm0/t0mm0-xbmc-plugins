@@ -34,8 +34,11 @@ mode = Addon.plugin_queries['mode']
 play = Addon.plugin_queries['play']
 
 if play:
-    Addon.log('play ' + play)
-    stream_url = freedo.resolve_stream(play)
+    Addon.log('play: %s mode: %s' % (play, mode))    
+    if mode == 'vid':
+        stream_url = freedo.resolve_video(play)
+    else:    
+        stream_url = freedo.resolve_stream(play)
     Addon.resolve_url(stream_url)
     
 elif mode == 'main':

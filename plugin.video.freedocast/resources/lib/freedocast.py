@@ -79,7 +79,18 @@ class Freedocast:
                        (streamer, app, play, self.__build_url(watch_url))
             Addon.log('resolved to: %s' % resolved)
         else:
-            resolved = False
+            s = re.search('streamsUrl:  \'(.+?)\'', watch_page)
+            if s:
+                xml_url = s.group(1)
+                xml = self.__get_html(xml_url)
+                s = re.search('<stream uri="(.+?)" stream="(.+?)"', xml)
+                if s:
+                    tcurl, play = s.groups()
+                    resolved = '%s/%s swfUrl=http://cdn.freedocast.com/player-octo/playerv2/swfs/broadkastplayer-yupp.swf pageUrl=%s' % (tcurl, play, watch_url)
+                else:
+                    resolved = False
+            else:
+                resolved = False
         return resolved
 
     def resolve_video(self, v_id):

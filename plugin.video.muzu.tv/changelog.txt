@@ -1,0 +1,10 @@
+[B]Version 0.2.0[/B]
+- add ability to view recordings you have previously made on ustvnow.com
+- fix bug with quality settings
+
+[B]Version 0.1.1[/B]
+- Fix breakage due to site changes by implementing logins
+- add setting to choose rtmp or rtsp streams
+
+[B]Version 0.1.0[/B]
+- Initial version

@@ -58,17 +58,36 @@ class MuzuTv:
     def get_genres(self):
         return self.__GENRES
 
-    def get_types(self, cat_id):
-        return None
+    def search(self, query):
+        videos = []
+        xml = self.__get_html('api/search', {'muzuid': self.__API_KEY,
+                                             'mySearch': query,
+                                             })
+        return self.__parse_xml(xml)
 
     def browse_videos(self, genre, page, res_per_page, days=0):
-        videos = []
         xml = self.__get_html('api/browse', {'muzuid': self.__API_KEY,
                                              'g': genre,
                                              'of': page * res_per_page,
                                              'l': res_per_page,
                                              'vd': days,
                                              })
+        return self.__parse_xml(xml)
+        
+    def resolve_stream(self, asset_id, hq=True):
+        resolved = False
+        vt = 1
+        if hq:
+            vt = 2
+        xml = self.__get_html('player/playAsset', {'assetId': asset_id,
+                                                   'videoType': vt})
+        s = re.search('src="(.+?)"', xml)
+        if s:
+            resolved = Addon.unescape(s.group(1))
+        return resolved
+
+    def __parse_xml(self, xml):
+        videos = []
         element = ET.fromstring(xml)
         for video in element.getiterator('video'):
             for img in video.find('thumbnails').getiterator('image'):
@@ -83,18 +102,6 @@ class MuzuTv:
                            'thumb': thumb.strip(),
                            })
         return videos
-        
-    def resolve_stream(self, asset_id, hq=True):
-        resolved = False
-        vt = 1
-        if hq:
-            vt = 2
-        xml = self.__get_html('player/playAsset', {'assetId': asset_id,
-                                                   'videoType': vt})
-        s = re.search('src="(.+?)"', xml)
-        if s:
-            resolved = Addon.unescape(s.group(1))
-        return resolved
 
     def __build_url(self, path, queries={}):
         query = Addon.build_query(queries)

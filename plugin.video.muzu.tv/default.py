@@ -44,10 +44,6 @@ if play:
     stream_url = muzu.resolve_stream(play, hq)
     Addon.resolve_url(stream_url)
     
-elif mode == 'main':
-    Addon.log(mode)
-    Addon.add_directory({'mode': 'browse'}, Addon.get_string(30000))
-
 elif mode == 'browse':
     page = int(Addon.plugin_queries.get('page', 0))
     res_per_page = int(Addon.get_setting('res_per_page'))
@@ -71,6 +67,32 @@ elif mode == 'browse':
         genres = muzu.get_genres()
         for g in genres:
             Addon.add_directory({'mode': 'browse', 'genre': g['id']}, g['name'])    
+
+elif mode == 'search':
+    Addon.log(mode)
+    kb = xbmc.Keyboard('', Addon.get_string(30027), False)
+    kb.doModal()
+    if (kb.isConfirmed()):
+        query = kb.getText()
+        if query:
+            videos = muzu.search(query)
+            for v in videos:
+                title = '%s: %s' % (v['artist'], v['title'])
+                Addon.add_video_item(str(v['asset_id']),
+                                     {'title': title,
+                                      'plot': v['description'],
+                                      'duration': str(v['duration']),
+                                     },
+                                     img=v['thumb'])
+        else:
+            mode = 'main'
+    else:
+        mode = 'main'
+
+if mode == 'main':
+    Addon.log(mode)
+    Addon.add_directory({'mode': 'browse'}, Addon.get_string(30000))
+    Addon.add_directory({'mode': 'search'}, Addon.get_string(30027))
 
 Addon.end_of_directory()
         

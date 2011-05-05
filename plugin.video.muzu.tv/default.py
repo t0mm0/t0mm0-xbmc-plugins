@@ -49,15 +49,29 @@ elif mode == 'main':
     Addon.add_directory({'mode': 'browse'}, Addon.get_string(30000))
 
 elif mode == 'browse':
-    Addon.log(mode)
-    videos = muzu.get_videos()
-    for v in videos:
-        Addon.add_video_item(v['asset_id'],
-                             {'title': v['title'],
-                              'artist': v['artist'],
-                             },
-                             img=v['thumb'])
+    page = int(Addon.plugin_queries.get('page', 0))
+    res_per_page = int(Addon.get_setting('res_per_page'))
+    genre = Addon.plugin_queries.get('genre', '')
     
+    Addon.log('browse genre: %s, page: %d' % (genre, page))
+
+    if genre:
+        videos = muzu.browse_videos(genre, page, res_per_page)
+        for v in videos:
+            title = '%s: %s' % (v['artist'], v['title'])
+            Addon.add_video_item(str(v['asset_id']),
+                                 {'title': title,
+                                  'plot': v['description'],
+                                  'duration': str(v['duration']),
+                                 },
+                                 img=v['thumb'])
+        Addon.add_directory({'mode': 'browse', 'genre': genre, 'page': page + 1},
+                            Addon.get_string(30026))
+    else:
+        genres = muzu.get_genres()
+        for g in genres:
+            Addon.add_directory({'mode': 'browse', 'genre': g['id']}, g['name'])    
+
 Addon.end_of_directory()
         
 

@@ -20,23 +20,69 @@ import cookielib
 import os
 import re
 import urllib, urllib2
+from xml.etree import ElementTree as ET
 
 class MuzuTv:
     __BASE_URL = 'http://www.muzu.tv'
+    __API_KEY = 'a4Aais8F9J'
+    __GENRES = [{'id': 'acoustic', 'name': Addon.get_string(30001)},
+                {'id': 'alternative', 'name': Addon.get_string(30002)},
+                {'id': 'blues', 'name': Addon.get_string(30003)},
+                {'id': 'celtic', 'name': Addon.get_string(30004)},
+                {'id': 'country', 'name': Addon.get_string(30005)},
+                {'id': 'dance', 'name': Addon.get_string(30006)},
+                {'id': 'electronic', 'name': Addon.get_string(30007)},
+                {'id': 'emo', 'name': Addon.get_string(30008)},
+                {'id': 'folk', 'name': Addon.get_string(30009)},
+                {'id': 'gospel', 'name': Addon.get_string(30010)},
+                {'id': 'hardcore', 'name': Addon.get_string(30011)},
+                {'id': 'hiphop', 'name': Addon.get_string(30012)},
+                {'id': 'indie', 'name': Addon.get_string(30013)},
+                {'id': 'jazz', 'name': Addon.get_string(30014)},
+                {'id': 'latin', 'name': Addon.get_string(30015)},
+                {'id': 'metal', 'name': Addon.get_string(30016)},
+                {'id': 'pop', 'name': Addon.get_string(30017)},
+                {'id': 'poppunk', 'name': Addon.get_string(30018)},
+                {'id': 'punk', 'name': Addon.get_string(30019)},
+                {'id': 'reggae', 'name': Addon.get_string(30020)},
+                {'id': 'rnb', 'name': Addon.get_string(30021)},
+                {'id': 'rock', 'name': Addon.get_string(30022)},
+                {'id': 'soul', 'name': Addon.get_string(30023)},
+                {'id': 'world', 'name': Addon.get_string(30024)},
+                {'id': 'other', 'name': Addon.get_string(30025)},                
+                ]
+    
     def __init__(self):
         pass
                             
-    def get_categories(self):
-        return None
-
     def get_genres(self):
-        return None
+        return self.__GENRES
 
     def get_types(self, cat_id):
         return None
 
-    def get_channels(self):
-        return None
+    def browse_videos(self, genre, page, res_per_page, days=0):
+        videos = []
+        xml = self.__get_html('api/browse', {'muzuid': self.__API_KEY,
+                                             'g': genre,
+                                             'of': page * res_per_page,
+                                             'l': res_per_page,
+                                             'vd': days,
+                                             })
+        element = ET.fromstring(xml)
+        for video in element.getiterator('video'):
+            for img in video.find('thumbnails').getiterator('image'):
+                if img.attrib['type'] =='6':
+                    thumb = img.find('url').text
+            videos.append({'duration': int(video.attrib['duration']),
+                           'asset_id': int(video.attrib['id']),
+                           'genre': video.attrib['genre'],
+                           'title': video.findtext('title').strip(),
+                           'artist': video.findtext('artistname').strip(),
+                           'description': video.findtext('description').strip(),
+                           'thumb': thumb.strip(),
+                           })
+        return videos
         
     def resolve_stream(self, asset_id, hq=True):
         resolved = False

@@ -2,4 +2,6 @@
 <settings>
     <setting type="lsep" label="30100" />
     <setting id="hq" type="bool" label="30101" default="true" />
+    <setting type="lsep" label="30102" />
+    <setting id="res_per_page" type="number" label="30103" default="20" />
 </settings>

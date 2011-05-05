@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
     <string id="30000">Browse</string>
+    <string id="30001">Acoustic</string>
+    <string id="30002">Alternative</string>
+    <string id="30003">Blues</string>
+    <string id="30004">Celtic</string>
+    <string id="30005">Country</string>
+    <string id="30006">Dance</string>
+    <string id="30007">Electronic</string>
+    <string id="30008">Emo</string>
+    <string id="30009">Folk</string>
+    <string id="30010">Gospel</string>
+    <string id="30011">Hardcore</string>
+    <string id="30012">Hip Hop</string>
+    <string id="30013">Indie</string>
+    <string id="30014">Jazz</string>
+    <string id="30015">Latin</string>
+    <string id="30016">Metal</string>
+    <string id="30017">Pop</string>
+    <string id="30018">Pop-Punk</string>
+    <string id="30019">Punk</string>
+    <string id="30020">Reggae</string>
+    <string id="30021">RnB</string>
+    <string id="30022">Rock</string>
+    <string id="30023">Soul</string>
+    <string id="30024">World</string>
+    <string id="30025">Other</string>
+    <string id="30026">Next</string>
     <string id="30100">Quality</string>
     <string id="30101">Enable HQ</string>
+    <string id="30102">Search</string>
+    <string id="30103">Results per page</string>
 </strings>

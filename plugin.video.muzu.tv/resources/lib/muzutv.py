@@ -51,12 +51,29 @@ class MuzuTv:
                 {'id': 'world', 'name': Addon.get_string(30024)},
                 {'id': 'other', 'name': Addon.get_string(30025)},                
                 ]
-    
+
     def __init__(self):
         pass
                             
     def get_genres(self):
         return self.__GENRES
+
+    def find_artist_assets(self, query, country='gb'):
+        assets = {'artists': [], 'videos': []}
+        json = self.__get_html('jukebox/findArtistAssets', {'mySearch': query, 
+                                                            'country': country})
+        if json.startswith('[{"'):
+            for a in re.finditer('\{.+?ArtistName":"(.+?)".+?ArtistIdentity":(\d+).+?\}', json):
+                name, artist_id = a.groups()
+                assets['artists'].append(name)
+        else:
+            for s in re.finditer('src="(.+?)".+?contentTitle-(\d+)" value="(.+?)".+?value="(.+?)"', json, re.DOTALL):
+                thumb, asset_id, title, artist = s.groups()
+                assets['videos'].append({'asset_id': asset_id,
+                                         'title': title,
+                                         'artist': artist,
+                                         'thumb': thumb})
+        return assets
 
     def search(self, query):
         videos = []

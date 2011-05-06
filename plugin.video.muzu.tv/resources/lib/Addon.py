@@ -40,7 +40,7 @@ def log(msg, err=False):
                     xbmc.LOGDEBUG)    
 
 def show_error(details):
-    show_dialog(details, get_string(30000), True)
+    show_dialog(details, 'muzu.tv', True)
 
 def show_dialog(details, title='ustvnow', is_error=False):
     error = ['', '', '']
@@ -58,6 +58,11 @@ def get_setting(setting):
 def get_string(string_id):
     return addon.getLocalizedString(string_id)   
 
+def get_new_playlist(pl_type=xbmc.PLAYLIST_VIDEO):
+    pl = xbmc.PlayList(pl_type)
+    pl.clear()
+    return pl
+
 def add_music_item(item_id, infolabels, img='', fanart='', total_items=0):
     infolabels = decode_dict(infolabels)
     url = build_plugin_url({'play': item_id})
@@ -70,18 +75,24 @@ def add_music_item(item_id, infolabels, img='', fanart='', total_items=0):
     xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
                                 isFolder=False, totalItems=total_items)
 
-def add_video_item(url, infolabels, img='', fanart='', total_items=0):
+def add_video_item(url, infolabels, img='', fanart='', total_items=0, playlist=False):
     infolabels = decode_dict(infolabels)
     if url.find('://') == -1:
         url = build_plugin_url({'play': url})
-    log('adding item: %s - %s' % (unicode(infolabels['title']), url))
     listitem = xbmcgui.ListItem(infolabels['title'], iconImage=img, 
                                 thumbnailImage=img)
     listitem.setInfo('video', infolabels)
     listitem.setProperty('IsPlayable', 'true')
     listitem.setProperty('fanart_image', fanart)
-    xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
-                                isFolder=False, totalItems=total_items)
+    if playlist is not False:
+        log(u'adding item: %s - %s to playlist' % 
+                            (unicode(infolabels['title'], 'utf8'), url))
+        playlist.add(url, listitem)
+    else:
+        log('adding item: %s - %s' % (unicode(infolabels['title'], 'utf8'), 
+                                      url))
+        xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
+                                    isFolder=False, totalItems=total_items)
 
 def add_directory(url_queries, title, img='', fanart='', total_items=0):
     url = build_plugin_url(url_queries)

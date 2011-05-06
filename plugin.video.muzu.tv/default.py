@@ -17,6 +17,7 @@
 '''
 
 from resources.lib import Addon, muzutv 
+import random
 import sys
 import xbmc, xbmcgui, xbmcplugin
 
@@ -81,6 +82,38 @@ elif mode == 'browse':
         for g in genres:
             Addon.add_directory({'mode': 'browse', 'genre': g['id']}, g['name'])    
 
+elif mode == 'jukebox':
+    Addon.log(mode)
+    mode = 'main'
+    kb = xbmc.Keyboard('', Addon.get_string(30035), False)
+    kb.doModal()
+    if (kb.isConfirmed()):
+        query = kb.getText()
+        if query:
+            country = Addon.get_setting('country')
+            assets = muzu.find_artist_assets(query, country)
+            if assets['artists']:
+                dialog = xbmcgui.Dialog()
+                q = dialog.select(Addon.get_string(30036), 
+                                  assets['artists'])
+                query = assets['artists'][q]
+                assets = muzu.find_artist_assets(query, country)
+            
+            pl = Addon.get_new_playlist(xbmc.PLAYLIST_VIDEO)
+            videos = assets.get('videos', False)        
+            random.shuffle(videos)
+            if videos:
+                for v in videos:
+                    title = '%s: %s' % (v['artist'], v['title'])
+                    Addon.add_video_item(str(v['asset_id']),
+                                         {'title': title,
+                                         },
+                                         img=v['thumb'],
+                                         playlist=pl)  
+                xbmc.Player().play(pl)   
+            else:
+                Addon.show_error([Addon.get_string(30037), query])
+
 elif mode == 'search':
     Addon.log(mode)
     kb = xbmc.Keyboard('', Addon.get_string(30027), False)
@@ -105,6 +138,7 @@ elif mode == 'search':
 if mode == 'main':
     Addon.log(mode)
     Addon.add_directory({'mode': 'browse'}, Addon.get_string(30000))
+    Addon.add_directory({'mode': 'jukebox'}, Addon.get_string(30034))
     Addon.add_directory({'mode': 'search'}, Addon.get_string(30027))
 
 Addon.end_of_directory()

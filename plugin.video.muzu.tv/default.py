@@ -48,11 +48,21 @@ elif mode == 'browse':
     page = int(Addon.plugin_queries.get('page', 0))
     res_per_page = int(Addon.get_setting('res_per_page'))
     genre = Addon.plugin_queries.get('genre', '')
+    sort = Addon.plugin_queries.get('sort', False)
     
     Addon.log('browse genre: %s, page: %d' % (genre, page))
 
     if genre:
-        videos = muzu.browse_videos(genre, page, res_per_page)
+        if not sort:
+            sort = int(Addon.get_setting('sort'))
+            if sort == 3:
+                dialog = xbmcgui.Dialog()
+                sort = dialog.select(Addon.get_string(30029),
+                                     [Addon.get_string(30030),
+                                      Addon.get_string(30031),
+                                      Addon.get_string(30032)])
+            sort = ['views', 'recent', 'alpha'][sort]
+        videos = muzu.browse_videos(genre, sort, page, res_per_page)
         for v in videos:
             title = '%s: %s' % (v['artist'], v['title'])
             Addon.add_video_item(str(v['asset_id']),
@@ -61,9 +71,12 @@ elif mode == 'browse':
                                   'duration': str(v['duration']),
                                  },
                                  img=v['thumb'])
-        Addon.add_directory({'mode': 'browse', 'genre': genre, 'page': page + 1},
+        Addon.add_directory({'mode': 'browse', 'genre': genre, 
+                             'page': page + 1, 'sort': sort},
                             Addon.get_string(30026))
     else:
+        Addon.add_directory({'mode': 'browse', 'genre': 'all'},
+                            Addon.get_string(30028))    
         genres = muzu.get_genres()
         for g in genres:
             Addon.add_directory({'mode': 'browse', 'genre': g['id']}, g['name'])    

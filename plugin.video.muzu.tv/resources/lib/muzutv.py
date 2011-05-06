@@ -65,13 +65,16 @@ class MuzuTv:
                                              })
         return self.__parse_xml(xml)
 
-    def browse_videos(self, genre, page, res_per_page, days=0):
-        xml = self.__get_html('api/browse', {'muzuid': self.__API_KEY,
-                                             'g': genre,
-                                             'of': page * res_per_page,
-                                             'l': res_per_page,
-                                             'vd': days,
-                                             })
+    def browse_videos(self, genre, sort, page, res_per_page, days=0):
+        queries = {'muzuid': self.__API_KEY,
+                   'of': page * res_per_page,
+                   'l': res_per_page,
+                   'vd': days,
+                   'ob': sort,
+                   }
+        if genre is not 'all':
+            queries['g'] = genre
+        xml = self.__get_html('api/browse', queries)
         return self.__parse_xml(xml)
         
     def resolve_stream(self, asset_id, hq=True):

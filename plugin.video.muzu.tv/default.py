@@ -40,6 +40,8 @@ if play:
     if mode == 'playlist':
         Addon.log('playlist: %s' % play)
         videos = muzu.get_playlist(Addon.plugin_queries['network'], play) 
+        if Addon.get_setting('random_pl') == 'true':
+            random.shuffle(videos)
         pl = Addon.get_new_playlist(xbmc.PLAYLIST_VIDEO)
         for v in videos:
             title = '%s: %s' % (v['artist'], v['title'])
@@ -178,6 +180,54 @@ elif mode == 'list_playlists':
                             Addon.get_string(30050))
         Addon.add_directory({'mode': 'list_playlists', 'ob': 'recent'}, 
                             Addon.get_string(30051))
+        Addon.add_directory({'mode': 'channels'}, 
+                            Addon.get_string(30052))
+
+elif mode == 'channels':
+    Addon.log(mode)
+
+    network_id = Addon.plugin_queries.get('network_id', False)
+    if network_id:
+        playlists = muzu.list_playlists_by_network(network_id)
+        for p in playlists:
+            Addon.add_directory({'play': p['id'], 'network': network_id,
+                                 'mode': 'playlist'},
+                                p['name'], p['thumb'])
+    else:
+        page = int(Addon.plugin_queries.get('page', 0))
+        res_per_page = 36
+        genre = Addon.plugin_queries.get('genre', '')
+        sort = Addon.plugin_queries.get('sort', False)
+        country = Addon.get_setting('country')
+
+        if genre:
+            if not sort:
+                sort = int(Addon.get_setting('sort'))
+                if sort == 3:
+                    dialog = xbmcgui.Dialog()
+                    sort = dialog.select(Addon.get_string(30029),
+                                         [Addon.get_string(30030),
+                                          Addon.get_string(30031),
+                                          Addon.get_string(30032)])
+                sort = ['views', 'recent', 'alpha'][sort]
+            networks = muzu.browse_networks(genre, sort, page, country=country)
+            for n in networks:
+                title = '%s (%s videos)' % (n['title'], n['num_vids'])
+                Addon.add_directory({'mode': 'channels', 
+                                     'network_id': n['network_id']},
+                                    title, 
+                                    img=n['thumb'])
+            Addon.add_directory({'mode': 'channels', 'genre': genre, 
+                                 'page': page + 1, 'sort': sort},
+                                Addon.get_string(30026))
+        else:
+            Addon.add_directory({'mode': 'channels', 'genre': 'all'},
+                                Addon.get_string(30028))    
+            genres = muzu.get_genres()
+            for g in genres:
+                Addon.add_directory({'mode': 'channels', 'genre': g['id']}, 
+                                    g['name'])    
+
     
 elif mode == 'search':
     Addon.log(mode)

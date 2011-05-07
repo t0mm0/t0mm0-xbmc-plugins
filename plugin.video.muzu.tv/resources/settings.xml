@@ -7,4 +7,5 @@
     <setting id="sort" type="enum" label="30029" default="3" lvalues="30030|30031|30032|30033"/>
     <setting type="lsep" label="30104" />
     <setting id="country" type="text" label="30105" default="gb" />
+    <setting id="random_pl" type="bool" label="30106" default="true" />
 </settings>

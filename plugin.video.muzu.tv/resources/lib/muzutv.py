@@ -110,6 +110,14 @@ class MuzuTv:
                               'network': unicode(network, 'utf8'),
                               'thumb': thumb})
         return playlists
+
+    def list_playlists_by_network(self, network_id):
+        playlists = []
+        xml = self.__get_html('player/networkVideos/%s' % network_id)
+        for p in re.finditer('<channel name="(.+?)" id="(\d+)".+?thumbnailurl="(.+?)"', xml, re.DOTALL):
+            name, pi, thumb = p.groups()
+            playlists.append({'name': name, 'id': pi, 'thumb': thumb})
+        return playlists
     
     def get_playlist(self, network_id, playlist_id):
         videos = []
@@ -135,6 +143,22 @@ class MuzuTv:
             queries['g'] = genre
         xml = self.__get_html('api/browse', queries)
         return self.__parse_videos(xml)
+
+    def browse_networks(self, genre, sort, page, days=0, country='gb'):
+        networks = []
+        queries = {'no': page * 36,
+                   'vd': days,
+                   'ob': sort,
+                   'country': country,
+                   }
+        if genre == 'acoustic':
+            genre = 'accoustic' #someone can't spell ;-)
+        html = self.__get_html('channels/%s' % genre, queries)
+        for n in re.finditer('browseContentItemThumb.+?title="(.+?)".+?src="(.+?)".+?data-target-identity="(\d+)".+?(\d+) videos?<\/div>', html, re.DOTALL):
+            title, thumb, network_id, num_vids = n.groups()
+            networks.append({'title': title, 'thumb': thumb, 
+                             'network_id': network_id, 'num_vids': num_vids})
+        return networks
         
     def resolve_stream(self, asset_id, hq=True):
         resolved = False

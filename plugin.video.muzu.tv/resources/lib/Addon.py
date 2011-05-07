@@ -85,12 +85,10 @@ def add_video_item(url, infolabels, img='', fanart='', total_items=0, playlist=F
     listitem.setProperty('IsPlayable', 'true')
     listitem.setProperty('fanart_image', fanart)
     if playlist is not False:
-        log(u'adding item: %s - %s to playlist' % 
-                            (unicode(infolabels['title'], 'utf8'), url))
+        log('adding item: %s - %s to playlist' % (infolabels['title'], url))
         playlist.add(url, listitem)
     else:
-        log('adding item: %s - %s' % (unicode(infolabels['title'], 'utf8'), 
-                                      url))
+        log('adding item: %s - %s' % (infolabels['title'], url))
         xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
                                     isFolder=False, totalItems=total_items)
 

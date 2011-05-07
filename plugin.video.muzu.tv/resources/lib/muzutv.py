@@ -96,15 +96,33 @@ class MuzuTv:
                                          'artist': artist,
                                          'thumb': thumb})
             assets['artist_ids'].append(artist_id)
-        print assets    
         return assets
 
+    def list_playlists(self, category, country='gb'):
+        playlists = []
+        html = self.__get_html('browse/loadPlaylistsByCategory', 
+                               {'ob': category, 'country': country})
+        for p in re.finditer('data-id="(\d+)" data-network-id="(\d+)".+?title="(.*?)\|(.*?)".+?src="(.+?)"', html, re.DOTALL):
+            playlist_id, network_id, name, network, thumb = p.groups()
+            playlists.append({'playlist_id': playlist_id,
+                              'network_id': network_id,
+                              'name': unicode(name, 'utf8'),
+                              'network': unicode(network, 'utf8'),
+                              'thumb': thumb})
+        return playlists
+    
+    def get_playlist(self, network_id, playlist_id):
+        videos = []
+        xml = self.__get_html('player/networkVideos/%s' % network_id)
+        videos = self.__parse_playlist(xml, playlist_id)
+        return videos
+    
     def search(self, query):
         videos = []
         xml = self.__get_html('api/search', {'muzuid': self.__API_KEY,
                                              'mySearch': query,
                                              })
-        return self.__parse_xml(xml)
+        return self.__parse_videos(xml)
 
     def browse_videos(self, genre, sort, page, res_per_page, days=0):
         queries = {'muzuid': self.__API_KEY,
@@ -116,7 +134,7 @@ class MuzuTv:
         if genre is not 'all':
             queries['g'] = genre
         xml = self.__get_html('api/browse', queries)
-        return self.__parse_xml(xml)
+        return self.__parse_videos(xml)
         
     def resolve_stream(self, asset_id, hq=True):
         resolved = False
@@ -130,7 +148,7 @@ class MuzuTv:
             resolved = Addon.unescape(s.group(1))
         return resolved
 
-    def __parse_xml(self, xml):
+    def __parse_videos(self, xml):
         videos = []
         element = ET.fromstring(xml)
         for video in element.getiterator('video'):
@@ -145,6 +163,22 @@ class MuzuTv:
                            'description': video.findtext('description').strip(),
                            'thumb': thumb.strip(),
                            })
+        return videos
+
+    def __parse_playlist(self, xml, playlist_id):
+        videos = []
+        element = ET.fromstring(xml)
+        for channel in element.getiterator('channel'):
+            if channel.attrib['id'] == playlist_id:
+                for video in channel.getiterator('asset'):
+                    videos.append({'duration': int(int(video.attrib['duration']) / 1000),
+                                   'asset_id': int(video.attrib['id']),
+                                   'genre': video.attrib['primarygenre'],
+                                   'title': video.attrib['title'],
+                                   'artist': video.attrib['artistname'],
+                                   'description': video.attrib['description'],
+                                   'thumb': video.attrib['thumbnailurl'],
+                                   })
         return videos
 
     def __build_url(self, path, queries={}):

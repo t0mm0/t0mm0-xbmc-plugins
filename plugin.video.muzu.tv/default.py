@@ -37,13 +37,28 @@ mode = Addon.plugin_queries['mode']
 play = Addon.plugin_queries['play']
 
 if play:
-    Addon.log('play: %s' % play)
-    if Addon.get_setting('hq') == 'true':
-        hq = True
+    if mode == 'playlist':
+        Addon.log('playlist: %s' % play)
+        videos = muzu.get_playlist(Addon.plugin_queries['network'], play) 
+        pl = Addon.get_new_playlist(xbmc.PLAYLIST_VIDEO)
+        for v in videos:
+            title = '%s: %s' % (v['artist'], v['title'])
+            Addon.add_video_item(str(v['asset_id']),
+                                 {'title': title,
+                                  'plot': v['description'],
+                                  'duration': str(v['duration']),
+                                 },
+                                 img=v['thumb'],
+                                 playlist=pl)  
+        xbmc.Player().play(pl)   
     else:
-        hq = False
-    stream_url = muzu.resolve_stream(play, hq)
-    Addon.resolve_url(stream_url)
+        Addon.log('play: %s' % play)
+        if Addon.get_setting('hq') == 'true':
+            hq = True
+        else:
+            hq = False
+        stream_url = muzu.resolve_stream(play, hq)
+        Addon.resolve_url(stream_url)
     
 elif mode == 'browse':
     page = int(Addon.plugin_queries.get('page', 0))
@@ -111,7 +126,7 @@ elif mode == 'jukebox':
             random.shuffle(videos)
             if videos:
                 for v in videos:
-                    title = '%s: %s' % (v['artist'], v['title'])
+                    title = unicode('%s: %s' % (v['artist'], v['title']), 'utf8')
                     Addon.add_video_item(str(v['asset_id']),
                                          {'title': title,
                                          },
@@ -132,17 +147,37 @@ elif mode == 'chart':
                                  {'title': title,},
                                  img=v['thumb'])
     else:
-        Addon.add_directory({'mode': 'chart',
-                             'chart': 1}, Addon.get_string(30042))
-        Addon.add_directory({'mode': 'chart',
-                             'chart': 2}, Addon.get_string(30043))
-        Addon.add_directory({'mode': 'chart',
-                             'chart': 3}, Addon.get_string(30044))
-        Addon.add_directory({'mode': 'chart',
-                             'chart': 4}, Addon.get_string(30045))
-        Addon.add_directory({'mode': 'chart',
-                             'chart': 5}, Addon.get_string(30046))
+        Addon.add_directory({'mode': 'chart', 'chart': 1}, 
+                            Addon.get_string(30042))
+        Addon.add_directory({'mode': 'chart', 'chart': 2}, 
+                            Addon.get_string(30043))
+        Addon.add_directory({'mode': 'chart', 'chart': 3}, 
+                            Addon.get_string(30044))
+        Addon.add_directory({'mode': 'chart', 'chart': 4}, 
+                            Addon.get_string(30045))
+        Addon.add_directory({'mode': 'chart', 'chart': 5}, 
+                            Addon.get_string(30046))
 
+elif mode == 'list_playlists':
+    Addon.log(mode)
+    ob = Addon.plugin_queries.get('ob', False)
+    if ob:
+        playlists = muzu.list_playlists(ob)
+        for p in playlists:
+            Addon.add_directory({'play': p['playlist_id'],
+                                 'network': p['network_id'], 
+                                 'mode': 'playlist'}, 
+                                '%s (%s)' % (p['name'], p['network']))
+    else:
+        Addon.add_directory({'mode': 'list_playlists', 'ob': 'featured'}, 
+                            Addon.get_string(30048))
+        Addon.add_directory({'mode': 'list_playlists', 'ob': 'festivals'}, 
+                            Addon.get_string(30049))
+        Addon.add_directory({'mode': 'list_playlists', 'ob': 'views'}, 
+                            Addon.get_string(30050))
+        Addon.add_directory({'mode': 'list_playlists', 'ob': 'recent'}, 
+                            Addon.get_string(30051))
+    
 elif mode == 'search':
     Addon.log(mode)
     kb = xbmc.Keyboard('', Addon.get_string(30027), False)
@@ -169,6 +204,7 @@ if mode == 'main':
     Addon.add_directory({'mode': 'browse'}, Addon.get_string(30000))
     Addon.add_directory({'mode': 'jukebox'}, Addon.get_string(30034))
     Addon.add_directory({'mode': 'chart'}, Addon.get_string(30041))
+    Addon.add_directory({'mode': 'list_playlists'}, Addon.get_string(30047))
     Addon.add_directory({'mode': 'search'}, Addon.get_string(30027))
 
 Addon.end_of_directory()

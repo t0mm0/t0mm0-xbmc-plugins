@@ -20,8 +20,14 @@ import cookielib
 import os
 import re
 import urllib, urllib2
-from xml.etree import ElementTree as ET
-
+try:
+    from xml.etree import ElementTree as ET
+except:
+    try:
+        import elementtree.ElementTree as ET
+    except:
+        import ElementTree as ET
+        
 class MuzuTv:
     __BASE_URL = 'http://www.muzu.tv'
     __API_KEY = 'a4Aais8F9J'

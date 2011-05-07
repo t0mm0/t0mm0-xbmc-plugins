@@ -1,2 +1,6 @@
+[B]Version 0.1.1[/B]
+- muzu can't spell acoustic ;-)
+- unicode fix
+
 [B]Version 0.1.0[/B]
 - Initial version

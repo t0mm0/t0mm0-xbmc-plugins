@@ -144,7 +144,8 @@ elif mode == 'chart':
     if chart:
         videos = muzu.get_chart(chart)
         for v in videos:
-            title = '%s (%s): %s' % (v['pos'], v['last_pos'], v['title'])
+            title = unicode('%s (%s): %s' % 
+                            (v['pos'], v['last_pos'], v['title']), 'utf8')
             Addon.add_video_item(str(v['asset_id']),
                                  {'title': title,},
                                  img=v['thumb'])

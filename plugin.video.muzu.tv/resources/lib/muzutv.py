@@ -58,21 +58,28 @@ class MuzuTv:
     def get_genres(self):
         return self.__GENRES
 
-    def find_artist_assets(self, query, country='gb'):
-        assets = {'artists': [], 'videos': []}
-        json = self.__get_html('jukebox/findArtistAssets', {'mySearch': query, 
-                                                            'country': country})
+    def jukebox(self, query, country='gb', jam=False):
+        assets = {'artists': [], 'artist_ids': [], 'videos': []}
+        if jam:
+            json = self.__get_html('jukebox/generateMixTape', {'ai': jam})
+        else:
+            json = self.__get_html('jukebox/findArtistAssets', {'mySearch': query, 
+                                                                'country': country})
         if json.startswith('[{"'):
             for a in re.finditer('\{.+?ArtistName":"(.+?)".+?ArtistIdentity":(\d+).+?\}', json):
                 name, artist_id = a.groups()
                 assets['artists'].append(name)
+                assets['artist_ids'].append(artist_id)
         else:
-            for s in re.finditer('src="(.+?)".+?contentTitle-(\d+)" value="(.+?)".+?value="(.+?)"', json, re.DOTALL):
-                thumb, asset_id, title, artist = s.groups()
+            artist_id = ''
+            for s in re.finditer('src="(.+?)".+?contentTitle-(\d+)" value="(.+?)".+?value="(.+?)".+?value="(.+?)"', json, re.DOTALL):
+                thumb, asset_id, title, artist, artist_id = s.groups()
                 assets['videos'].append({'asset_id': asset_id,
                                          'title': title,
                                          'artist': artist,
                                          'thumb': thumb})
+            assets['artist_ids'].append(artist_id)
+        print assets    
         return assets
 
     def search(self, query):

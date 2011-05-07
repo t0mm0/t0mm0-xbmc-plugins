@@ -85,19 +85,26 @@ elif mode == 'browse':
 elif mode == 'jukebox':
     Addon.log(mode)
     mode = 'main'
+    dialog = xbmcgui.Dialog()
+    jam = dialog.select(Addon.get_string(30038), 
+                        [Addon.get_string(30039), Addon.get_string(30040)])
     kb = xbmc.Keyboard('', Addon.get_string(30035), False)
     kb.doModal()
     if (kb.isConfirmed()):
         query = kb.getText()
         if query:
             country = Addon.get_setting('country')
-            assets = muzu.find_artist_assets(query, country)
+            assets = muzu.jukebox(query, country)
+            artist_id = assets['artist_ids'][0]
             if assets['artists']:
-                dialog = xbmcgui.Dialog()
                 q = dialog.select(Addon.get_string(30036), 
                                   assets['artists'])
                 query = assets['artists'][q]
-                assets = muzu.find_artist_assets(query, country)
+                artist_id = assets['artist_ids'][q]
+                assets = muzu.jukebox(query, country)
+            
+            if jam:
+                assets = muzu.jukebox(query, country, jam=artist_id)
             
             pl = Addon.get_new_playlist(xbmc.PLAYLIST_VIDEO)
             videos = assets.get('videos', False)        

@@ -31,7 +31,7 @@ except:
 class MuzuTv:
     __BASE_URL = 'http://www.muzu.tv'
     __API_KEY = 'a4Aais8F9J'
-    __GENRES = [{'id': 'acoustic', 'name': Addon.get_string(30001)},
+    __GENRES = [{'id': 'accoustic', 'name': Addon.get_string(30001)},
                 {'id': 'alternative', 'name': Addon.get_string(30002)},
                 {'id': 'blues', 'name': Addon.get_string(30003)},
                 {'id': 'celtic', 'name': Addon.get_string(30004)},
@@ -157,8 +157,6 @@ class MuzuTv:
                    'ob': sort,
                    'country': country,
                    }
-        if genre == 'acoustic':
-            genre = 'accoustic' #someone can't spell ;-)
         html = self.__get_html('channels/%s' % genre, queries)
         for n in re.finditer('browseContentItemThumb.+?title="(.+?)".+?src="(.+?)".+?data-target-identity="(\d+)".+?(\d+) videos?<\/div>', html, re.DOTALL):
             title, thumb, network_id, num_vids = n.groups()

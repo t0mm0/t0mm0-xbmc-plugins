@@ -58,6 +58,23 @@ class MuzuTv:
     def get_genres(self):
         return self.__GENRES
 
+    def get_chart(self, chart):
+        videos = []
+        html = self.__get_html('browse/charts/chart/%s' % chart, 
+                               {'country': 'gb'})
+        for v in re.finditer('mDown">.+?(\d+).+?mDown">.+?([\d*]+).+?<\/div>.+?src="(.+?)".+?alt="(.+?)"', html, re.DOTALL):
+            pos, last_pos, thumb, title = v.groups()
+            video_id = 0
+            v_id = re.search('\/(\d+)\?', v.group(0))
+            if v_id:
+                video_id = v_id.group(1)
+            videos.append({'title': title,
+                           'pos': pos,
+                           'last_pos': last_pos,
+                           'asset_id': video_id,
+                           'thumb': thumb})
+        return videos
+        
     def jukebox(self, query, country='gb', jam=False):
         assets = {'artists': [], 'artist_ids': [], 'videos': []}
         if jam:

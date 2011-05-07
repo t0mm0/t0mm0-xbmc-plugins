@@ -121,6 +121,28 @@ elif mode == 'jukebox':
             else:
                 Addon.show_error([Addon.get_string(30037), query])
 
+elif mode == 'chart':
+    Addon.log(mode)
+    chart = Addon.plugin_queries.get('chart', '')    
+    if chart:
+        videos = muzu.get_chart(chart)
+        for v in videos:
+            title = '%s (%s): %s' % (v['pos'], v['last_pos'], v['title'])
+            Addon.add_video_item(str(v['asset_id']),
+                                 {'title': title,},
+                                 img=v['thumb'])
+    else:
+        Addon.add_directory({'mode': 'chart',
+                             'chart': 1}, Addon.get_string(30042))
+        Addon.add_directory({'mode': 'chart',
+                             'chart': 2}, Addon.get_string(30043))
+        Addon.add_directory({'mode': 'chart',
+                             'chart': 3}, Addon.get_string(30044))
+        Addon.add_directory({'mode': 'chart',
+                             'chart': 4}, Addon.get_string(30045))
+        Addon.add_directory({'mode': 'chart',
+                             'chart': 5}, Addon.get_string(30046))
+
 elif mode == 'search':
     Addon.log(mode)
     kb = xbmc.Keyboard('', Addon.get_string(30027), False)
@@ -146,6 +168,7 @@ if mode == 'main':
     Addon.log(mode)
     Addon.add_directory({'mode': 'browse'}, Addon.get_string(30000))
     Addon.add_directory({'mode': 'jukebox'}, Addon.get_string(30034))
+    Addon.add_directory({'mode': 'chart'}, Addon.get_string(30041))
     Addon.add_directory({'mode': 'search'}, Addon.get_string(30027))
 
 Addon.end_of_directory()

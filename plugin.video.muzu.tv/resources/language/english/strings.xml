@@ -52,10 +52,11 @@
     <string id="30049">Festivals</string>
     <string id="30050">Popular</string>
     <string id="30051">Recent</string>
+    <string id="30052">Channels</string>
     <string id="30100">Quality</string>
     <string id="30101">Enable HQ</string>
     <string id="30102">Browse</string>
     <string id="30103">Results per page</string>
-    <string id="30104">Jukebox</string>
+    <string id="30104">Jukebox/Playlists</string>
     <string id="30105">Country ('gb' gets most videos)</string>
 </strings>

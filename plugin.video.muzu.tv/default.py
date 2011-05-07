@@ -162,7 +162,8 @@ elif mode == 'list_playlists':
     Addon.log(mode)
     ob = Addon.plugin_queries.get('ob', False)
     if ob:
-        playlists = muzu.list_playlists(ob)
+        country = Addon.get_setting('country')
+        playlists = muzu.list_playlists(ob, country)
         for p in playlists:
             Addon.add_directory({'play': p['playlist_id'],
                                  'network': p['network_id'], 

@@ -17,6 +17,7 @@
 '''
 
 from resources.lib import Addon, muzutv 
+import os.path
 import random
 import sys
 import xbmc, xbmcgui, xbmcplugin
@@ -37,12 +38,25 @@ mode = Addon.plugin_queries['mode']
 play = Addon.plugin_queries['play']
 
 if play:
+    Addon.log('play: %s' % play)
+    if Addon.get_setting('hq') == 'true':
+        hq = True
+    else:
+        hq = False
     if mode == 'playlist':
         Addon.log('playlist: %s' % play)
         videos = muzu.get_playlist(Addon.plugin_queries['network'], play) 
         if Addon.get_setting('random_pl') == 'true':
             random.shuffle(videos)
         pl = Addon.get_new_playlist(xbmc.PLAYLIST_VIDEO)
+        res_dir = os.path.join(Addon.addon.getAddonInfo('path'), 
+                               'resources')
+        videos.insert(0, {'artist': 't0mm0', 
+                          'title': 'muzu.tv',
+                          'asset_id': 'file://%s/bodge.mp4' % res_dir,
+                          'description': 'bodging auto playlist...',
+                          'duration': 1,
+                          'thumb': '%s/bodge.png' % res_dir})
         for v in videos:
             title = '%s: %s' % (v['artist'], v['title'])
             Addon.add_video_item(str(v['asset_id']),
@@ -52,13 +66,9 @@ if play:
                                  },
                                  img=v['thumb'],
                                  playlist=pl)  
-        xbmc.Player().play(pl)   
+        xbmc.Player().play(pl)
+        mode = 'main'  
     else:
-        Addon.log('play: %s' % play)
-        if Addon.get_setting('hq') == 'true':
-            hq = True
-        else:
-            hq = False
         stream_url = muzu.resolve_stream(play, hq)
         Addon.resolve_url(stream_url)
     
@@ -124,8 +134,20 @@ elif mode == 'jukebox':
                 assets = muzu.jukebox(query, country, jam=artist_id)
             
             pl = Addon.get_new_playlist(xbmc.PLAYLIST_VIDEO)
+            if Addon.get_setting('hq') == 'true':
+                hq = True
+            else:
+                hq = False
             videos = assets.get('videos', False)        
             random.shuffle(videos)
+            res_dir = os.path.join(Addon.addon.getAddonInfo('path'), 
+                                   'resources')
+            videos.insert(0, {'artist': 't0mm0', 
+                              'title': 'muzu.tv',
+                              'asset_id': 'file://%s/bodge.mp4' % res_dir,
+                              'description': 'bodging auto playlist...',
+                              'duration': 1,
+                              'thumb': '%s/bodge.png' % res_dir})
             if videos:
                 for v in videos:
                     title = unicode('%s: %s' % (v['artist'], v['title']), 'utf8')
@@ -260,5 +282,5 @@ if mode == 'main':
     Addon.add_directory({'mode': 'search'}, Addon.get_string(30027))
 
 Addon.end_of_directory()
-        
+      
 

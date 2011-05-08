@@ -59,7 +59,7 @@ class Subsonic:
             indexes = payload['indexes'].get('index', False)
             if indexes:
                 index = []
-                [index.extend(i) for i in [i['artist'] 
+                [index.extend(i) for i in [self.listify(i['artist']) 
                     for i in self.listify(indexes)]]
                 [Addon.add_artist(i) for i in index if type(i) is dict]
                 Addon.end_of_directory()

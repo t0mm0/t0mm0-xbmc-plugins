@@ -1,3 +1,8 @@
+[B]Version 0.3.0[/B]
+- add facility to view random, newest, top rated, most played and recently played albums
+- add support for subsonic shortcuts
+- fix for indexes with only one artist
+
 [B]Version 0.2.3[/B]
 - fix for artist names that only contain numbers
 - fix for titles with unicode names

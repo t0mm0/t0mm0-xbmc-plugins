@@ -138,6 +138,8 @@ def _callback(matches):
         return id
 
 def decode(data):
+    if type(data) is int:
+        data = unicode(data)
     return re.sub("&#(\d+)(;|(?=\s))", _callback, data).strip()
 
 def decode_dict(data):

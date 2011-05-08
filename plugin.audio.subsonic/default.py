@@ -42,6 +42,23 @@ if subsonic.ping():
         subsonic.get_music_directory(Addon.plugin_queries['id'])
     elif Addon.plugin_queries['mode'] == 'play': 
         subsonic.play(Addon.plugin_queries['id'])
+    elif Addon.plugin_queries['mode'] == 'albums':
+        page = Addon.plugin_queries.get('page', 0)
+        sort = Addon.plugin_queries.get('sort', '')
+        if sort:
+            subsonic.get_album_list(sort, page)
+        else:
+            Addon.add_directory({'mode': 'albums', 'sort': 'random'}, 
+                                Addon.get_string(30032))
+            Addon.add_directory({'mode': 'albums', 'sort': 'newest'},
+                                Addon.get_string(30033))
+            Addon.add_directory({'mode': 'albums', 'sort': 'highest'}, 
+                                Addon.get_string(30034))
+            Addon.add_directory({'mode': 'albums', 'sort': 'frequent'}, 
+                                Addon.get_string(30035))
+            Addon.add_directory({'mode': 'albums', 'sort': 'recent'},
+                                Addon.get_string(30036))
+            Addon.end_of_directory()
     elif Addon.plugin_queries['mode'] == 'random':
         random_mode = Addon.plugin_queries.get('random_mode', False)
         if random_mode:

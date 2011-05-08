@@ -56,7 +56,7 @@ if play:
                           'asset_id': 'file://%s/bodge.mp4' % res_dir,
                           'description': 'bodging auto playlist...',
                           'duration': 1,
-                          'thumb': '%s/bodge.png' % res_dir})
+                          'thumb': 'file://%s/bodge.png' % res_dir})
         for v in videos:
             title = '%s: %s' % (v['artist'], v['title'])
             Addon.add_video_item(str(v['asset_id']),
@@ -147,7 +147,7 @@ elif mode == 'jukebox':
                               'asset_id': 'file://%s/bodge.mp4' % res_dir,
                               'description': 'bodging auto playlist...',
                               'duration': 1,
-                              'thumb': '%s/bodge.png' % res_dir})
+                              'thumb': 'file://%s/bodge.png' % res_dir})
             if videos:
                 for v in videos:
                     title = unicode('%s: %s' % (v['artist'], v['title']), 'utf8')

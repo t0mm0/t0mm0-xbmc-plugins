@@ -46,6 +46,7 @@ class Subsonic:
                     Addon.add_directory({'mode': 'list_indexes', 
                                          'folder_id': folder['id']}, 
                                         folder['name'], total_items=total)
+            Addon.add_directory({'mode': 'albums'}, Addon.get_string(30031))
             Addon.add_directory({'mode': 'search'}, Addon.get_string(30006))
             Addon.add_directory({'mode': 'list_playlists'}, 
                                 Addon.get_string(30011))
@@ -75,8 +76,22 @@ class Subsonic:
         if payload:
             songs = self.listify(payload['directory']['child'])
             self.display_music_directory(songs)
+
+    def get_album_list(self, sort, page=0):
+        Addon.log('get_album_list: ' + sort)
+        payload = self.__get_json('getAlbumList.view', {'type': sort,
+                                  'size': 50, 'offset': int(page) * 50})
+        if payload:
+            if payload['albumList']:
+                albums = self.listify(payload['albumList']['album'])
+                self.display_music_directory(albums, False)
+                if len(albums) == 50:
+                    Addon.add_directory({'mode': 'albums', 'sort': sort, 
+                                         'page': int(page) + 1},
+                                        Addon.get_string(30037))
+        Addon.end_of_directory()
         
-    def display_music_directory(self, songs):
+    def display_music_directory(self, songs, done=True):
         for song in songs: 
             if type(song) is dict:
                 cover_art = self.get_cover_art_url(song.get('coverArt', None))
@@ -84,7 +99,8 @@ class Subsonic:
                     Addon.add_album(song, cover_art)
                 else:    
                     Addon.add_song(song, cover_art)
-        Addon.end_of_directory()
+        if done:
+            Addon.end_of_directory()
     
     def get_playlists(self):
         Addon.log('get_playlists')

@@ -12,8 +12,8 @@
     <string id="30009">Search Song</string>
     <string id="30010">No search results</string>
     <string id="30011">Playlists</string>
-    <string id="30012">Random</string>
-    <string id="30013">Select Random Filter</string>
+    <string id="30012">Smart Playlists</string>
+    <string id="30013">Select Smart Filter</string>
     <string id="30014">All</string>
     <string id="30015">By Years</string>
     <string id="30016">By Genre</string>
@@ -31,6 +31,13 @@
     <string id="30028">00's</string>
     <string id="30029">10's</string>
     <string id="30030">Subsonic returned no content</string>
+    <string id="30031">Albums</string>
+    <string id="30032">Random</string>
+    <string id="30033">Newest</string>
+    <string id="30034">Top Rated</string>
+    <string id="30035">Most Played</string>
+    <string id="30036">Recently Played</string>
+    <string id="30037">Next</string>
     <string id="30100">Server Address</string>
     <string id="30101">Username</string>
     <string id="30102">Password</string>

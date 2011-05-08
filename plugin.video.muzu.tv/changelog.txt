@@ -1,0 +1,9 @@
+[B]Version 0.1.2[/B]
+- ugly bodge to try and make playlists/jukebox work on 10.1
+
+[B]Version 0.1.1[/B]
+- muzu can't spell acoustic ;-)
+- unicode fix
+
+[B]Version 0.1.0[/B]
+- Initial version

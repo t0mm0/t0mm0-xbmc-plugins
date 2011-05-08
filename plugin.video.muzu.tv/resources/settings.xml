@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <setting type="lsep" label="30100" />
+    <setting id="hq" type="bool" label="30101" default="true" />
+    <setting type="lsep" label="30102" />
+    <setting id="res_per_page" type="number" label="30103" default="20" />
+    <setting id="sort" type="enum" label="30029" default="3" lvalues="30030|30031|30032|30033"/>
+    <setting type="lsep" label="30104" />
+    <setting id="country" type="text" label="30105" default="gb" />
+    <setting id="random_pl" type="bool" label="30106" default="true" />
+</settings>

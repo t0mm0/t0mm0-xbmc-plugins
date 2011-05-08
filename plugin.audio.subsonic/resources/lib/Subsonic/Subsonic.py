@@ -57,8 +57,11 @@ class Subsonic:
         payload = self.__get_json('getIndexes.view', {'musicFolderId': folder_id})
         if payload:
             indexes = payload['indexes'].get('index', False)
+            shortcuts = self.listify(payload['indexes'].get('shortcut', False))
             if indexes:
                 index = []
+                if shortcuts:
+                    [Addon.add_artist(s) for s in shortcuts if type(s) is dict]
                 [index.extend(i) for i in [self.listify(i['artist']) 
                     for i in self.listify(indexes)]]
                 [Addon.add_artist(i) for i in index if type(i) is dict]

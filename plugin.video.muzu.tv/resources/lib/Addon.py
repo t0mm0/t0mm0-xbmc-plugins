@@ -33,11 +33,11 @@ except:
 
 def log(msg, err=False):
     if err:
-        xbmc.log(addon.getAddonInfo('name') + ': ' + msg.encode('utf-8'), 
-                 xbmc.LOGERROR)    
+        xbmc.log(addon.getAddonInfo('name') + ': ' + 
+                 msg.encode('ascii','ignore'), xbmc.LOGERROR)    
     else:
-        xbmc.output(addon.getAddonInfo('name') + ': ' + msg.encode('utf-8'), 
-                    xbmc.LOGDEBUG)    
+        xbmc.output(addon.getAddonInfo('name') + ': ' + 
+                    msg.encode('ascii','ignore'), xbmc.LOGDEBUG)    
 
 def show_error(details):
     show_dialog(details, 'muzu.tv', True)

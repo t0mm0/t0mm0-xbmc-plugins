@@ -1,5 +1,0 @@
-[B]Version 0.1.1[/B]
-- fix for older version of python
-
-[B]Version 0.1.0[/B]
-- Initial version

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addoninfo>
+    <!-- (required) guuid: unique identifier of this addon
+    guuids can be generated online at sites such as http://www.famkruithof.net/uuid/uuidgen -->
+    <guid>aec364c5-4df7-424c-b6c6-7eb5c7f6fbb2</guid>
+
+    <!-- (required) type:
+    1:  visualization
+    2:  skin
+    3:  pvrdll
+    4:  script
+    5:  scraper
+    6:  screensaver
+    7:  plugin-pvr
+    8:  plugin-video
+    9:  plugin-music
+    10: plugin-program
+    11: plugin-pictures
+    12: plugin-weather -->
+    <type>8</type>
+
+    <!-- (required) Title -->
+    <title>Daily Seinfeld</title>
+
+    <!-- (required) Major.minor.build -->
+    <version>0.1.0</version>
+
+    <!-- (required) author name & email.  at least one author name is required -->
+    <authors>
+        <author name="t0mm0" email="dev@onairsoftware.co.uk" />
+    </authors>
+
+    <!-- (required) Short description of addon. -->
+    <summary>Jerry Seinfeld Personal Archives</summary>
+
+    <!-- Longer descrption of addon.  Usage instructions should go here if required. -->
+    <description>When I was ten years old, I started watching stand up comedians on TV.
+
+I fell in love with them and I'm just as fascinated with stand up comedy today.
+
+When I started doing TV, I saved every appearance on every show I did.
+
+I thought it might be fun to go through all of it and pick out three bits each day that still amuse me for some reason or another.
+
+I've also included stuff I'm doing now, and I'll be adding new stuff as I go.
+
+Somewhere out there are ten year olds just waiting to get hooked on this strange pursuit.
+
+This is for them.
+I'm just hoping somehow it will keep this silliness going.
+
+JS</description>
+
+    <!-- user defined tags e.g. <tags><tag>Example</tag></tags> -->
+    <tags>
+        <tag></tag>
+    </tags>
+
+    <!-- minimum revision of xbmc your addon will run on.  Leave blank all for revisions-->
+    <minrevision>30559</minrevision>
+
+    <!--patforms compatible with your addon.   xbox, osx, windows, linux, or all -->
+    <platforms>
+        <platform>xbox</platform>
+    </platforms>
+
+    <!-- (optional) The License the addon is released under.-->
+    <license>GPLv3</license>
+</addoninfo>

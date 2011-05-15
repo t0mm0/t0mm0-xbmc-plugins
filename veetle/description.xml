@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addoninfo>
+    <!-- (required) guuid: unique identifier of this addon
+    guuids can be generated online at sites such as http://www.famkruithof.net/uuid/uuidgen -->
+    <guid>eabd7dd8-2d54-48d0-9e7f-17e1df1e35b6</guid>
+
+    <!-- (required) type:
+    1:  visualization
+    2:  skin
+    3:  pvrdll
+    4:  script
+    5:  scraper
+    6:  screensaver
+    7:  plugin-pvr
+    8:  plugin-video
+    9:  plugin-music
+    10: plugin-program
+    11: plugin-pictures
+    12: plugin-weather -->
+    <type>8</type>
+
+    <!-- (required) Title -->
+    <title>veetle</title>
+
+    <!-- (required) Major.minor.build -->
+    <version>0.1.3</version>
+
+    <!-- (required) author name & email.  at least one author name is required -->
+    <authors>
+        <author name="t0mm0" email="dev@onairsoftware.co.uk" />
+    </authors>
+
+    <!-- (required) Short description of addon. -->
+    <summary>Browse and stream from veetle.com</summary>
+
+    <!-- Longer descrption of addon.  Usage instructions should go here if required. -->
+    <description>Enables watching streams on veetle.com that are flash enabled.
+    Does not work for 'HD' streams which require a software download.</description>
+
+    <!-- user defined tags e.g. <tags><tag>Example</tag></tags> -->
+    <tags>
+        <tag></tag>
+    </tags>
+
+    <!-- minimum revision of xbmc your addon will run on.  Leave blank all for revisions-->
+    <minrevision>30559</minrevision>
+
+    <!--patforms compatible with your addon.   xbox, osx, windows, linux, or all -->
+    <platforms>
+        <platform>xbox</platform>
+    </platforms>
+
+    <!-- (optional) The License the addon is released under.-->
+    <license>GPLv3</license>
+</addoninfo>

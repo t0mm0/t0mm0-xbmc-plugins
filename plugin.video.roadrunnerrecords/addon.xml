@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="plugin.video.roadrunnerrecords" version="0.1.0" name="Roadrunner Records" provider-name="t0mm0">
+    <requires>
+        <import addon="xbmc.python" version="1.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>audio video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Plays music and videos from Roadrunner Records</summary>
+        <description>Plays music and videos from Roadrunner Records. Testing this made my ears hurt ;-)</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+

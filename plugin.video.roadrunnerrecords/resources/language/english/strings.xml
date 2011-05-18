@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <string id="30000">Roadrunner Records</string>
+    <string id="30001">Audio</string>
+    <string id="30002">Video</string>
+    <string id="30003">Newest</string>
+    <string id="30004">Most Played</string>
+    <string id="30005">Least Played</string>
+    <string id="30006">Highest Rated</string>
+    <string id="30007">Most Commented</string>
+    <string id="30008">Search</string>
+    <string id="30009">Next</string>
+    <string id="30010">This Week</string>
+    <string id="30011">This Month</string>
+    <string id="30012">This Year</string>
+    <string id="30013">All Time</string>
+</strings>

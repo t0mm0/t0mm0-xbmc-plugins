@@ -33,7 +33,11 @@ CHANNEL_LISTING = BASE_URL + '/channel-listing-cross-site.js'
 
 def get_ajax_json(url):
     response = urllib2.urlopen(url)
-    stream_json = json.loads(response.read())    
+    print 'getting: ' + url
+    try:
+        stream_json = json.loads(response.read())    
+    except ValueError, error_info:
+        stream_json = {'success': False, 'payload': str(error_info)}
     if stream_json['success']:
         return stream_json['payload']
     else:
@@ -50,7 +54,7 @@ def get_channel_info(channel_id):
         return json.loads(get_ajax_json(BASE_URL + 
                                         '/index.php/channel/ajaxInfo/' + 
                                         channel_id))
-    except ValueError, error_info:
+    except Exception, error_info:
         print 'Problem getting channel info: ' + channel_id
         print 'Error returned: ', error_info
         return {'title': 'unknown',
@@ -98,7 +102,7 @@ class VeetleSchedule:
 
 if pluginQuery.startswith('?play='):
     #Play a stream with the given channel id
-    channel_id = pluginQuery[6:]
+    channel_id = pluginQuery[6:].strip()
     print 'veetle.com Channel ID: ' + channel_id
     stream_url = get_stream_url(channel_id)
     if stream_url:        

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="plugin.video.veetle" version="0.1.3" name="Veetle" provider-name="t0mm0">
+<addon id="plugin.video.veetle" version="0.1.4" name="Veetle" provider-name="t0mm0">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
         <import addon="script.module.simplejson" version="2.0.10"/>

@@ -107,7 +107,7 @@ class Crackle:
             d = self.__get_html('chromewebapp/WatchShow.aspx', 
                                 {'id': media}, use_proxy=True)
 
-            rating, title, plot = re.search('Rating: (.+?)<\/b>.+?"mediaTitle">(.+?)<\/h3>.*?"mediaDesc">(.+?)<\/div>', d, re.DOTALL).groups()            
+            title, rating, plot = re.search('"mediaTitle">(.+?)<\/h3>.*?Rating: (.+?)<\/b>.+?"mediaDesc">(.+?)<\/div>', d, re.DOTALL).groups()            
             
             cast = re.search('Cast:.+?synopsis">(.+?)<\/div>', d, re.DOTALL)
             if cast:

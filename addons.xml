@@ -159,7 +159,7 @@ JS</description>
     </extension>
 </addon>
 
-<addon id="plugin.video.crackle" version="0.1.0" name="Crackle" provider-name="t0mm0">
+<addon id="plugin.video.crackle" version="0.1.1" name="Crackle" provider-name="t0mm0">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
     </requires>

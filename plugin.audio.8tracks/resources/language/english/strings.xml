@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <string id="30000">8tracks</string>
+    <string id="30001">Unknown Title</string>
+    <string id="30002">Unknown Artist</string>
+    <string id="30003">Unknown Album</string>
+    <string id="30004">Failed to find stream</string>
+    <string id="30005">No json found</string>
+    <string id="30006">Couldn't get URL</string>
+    <string id="30010">Browse Mixes</string>
+    <string id="30011">Latest</string>
+    <string id="30012">Hot this week</string>
+    <string id="30013">Popular this month</string>
+    <string id="30014">Random</string>
+    <string id="30015">Next</string>
+    <string id="30016">Browse by Tags</string>
+    <string id="30017">Search by Artist</string>
+</strings>

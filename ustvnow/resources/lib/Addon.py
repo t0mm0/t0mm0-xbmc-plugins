@@ -70,7 +70,8 @@ def add_music_item(item_id, infolabels, img='', fanart='', total_items=0):
     xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
                                 isFolder=False, totalItems=total_items)
 
-def add_video_item(url, infolabels, img='', fanart='', total_items=0):
+def add_video_item(url, infolabels, img='', fanart='', total_items=0, 
+                   cm=[], cm_replace=False):
     infolabels = decode_dict(infolabels)
     if url.find('://') == -1:
         url = build_plugin_url({'play': url})
@@ -80,6 +81,8 @@ def add_video_item(url, infolabels, img='', fanart='', total_items=0):
     listitem.setInfo('video', infolabels)
     listitem.setProperty('IsPlayable', 'true')
     listitem.setProperty('fanart_image', fanart)
+    if cm:
+        listitem.addContextMenuItems(cm, cm_replace)
     xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
                                 isFolder=False, totalItems=total_items)
 

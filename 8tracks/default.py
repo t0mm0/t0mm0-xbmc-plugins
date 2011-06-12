@@ -38,58 +38,19 @@ mode = Addon.plugin_queries['mode']
 play = Addon.plugin_queries['play']
 next = Addon.plugin_queries.get('next', None)
 
-if play or next:
-    next_mix = False
+if play:
     user = Addon.plugin_queries['user']
     img = Addon.plugin_queries['img']
     mix_name = Addon.plugin_queries['mix_name']
     mix_id = play or next
-    if play:
-        result = et.play(mix_id)
-        pl = Addon.get_playlist(xbmc.PLAYLIST_MUSIC, True)
-    else:
-        result = et.next(mix_id)
-        pl = Addon.get_playlist(xbmc.PLAYLIST_MUSIC)
-
-    if result['set']['at_end']:
-        result = et.next_mix(mix_id)
-        pl.remove(Addon.build_plugin_url({'next': mix_id,
-                                          'mix_name': mix_name,
-                                          'user': user,
-                                          'img': img}))
-        next_mix = result['next_mix']
-        mix_id = next_mix['id']
-        mix_name = next_mix['name']
-        user = next_mix['user']['login']
-        img = next_mix['cover_urls']['max200']                                       
-        result = et.play(mix_id)
-
-    if play or next_mix:
-        Addon.add_music_item(Addon.build_plugin_url({'next': mix_id,
-                                                     'mix_name': mix_name,
-                                                     'user': user,
-                                                     'img': img}), 
-                             {'title': mix_name, 'artist': user}, 
-                             img=img, playlist=pl)
-    t = result['set']['track']
-    Addon.add_music_item(t['url'], {'title': t['name'], 
-                                    'artist': t['performer'], 
-                                    'album': t['release_name']}, img=img, 
-                         playlist=pl, playlist_pos=-1)
-
-    if play:
-        xbmc.Player(xbmc.PLAYER_CORE_DVDPLAYER).play(pl)    
-    else:
-        listitem = xbmcgui.ListItem(t['name'], iconImage=img, 
-                                    thumbnailImage=img)
-        listitem.setInfo('music', {'title': t['name'], 'artist': t['performer'], 
-                                   'album': t['release_name']})
-        Addon.resolve_url(t['url'], listitem)
-
+    player = EightTracksPlayer(xbmc.PLAYER_CORE_DVDPLAYER, et=et)
+    player.play_mix(mix_id, mix_name, user, img)
+        
 elif mode == 'mixes':
     sort = Addon.plugin_queries.get('sort', '')
     tag = Addon.plugin_queries.get('tag', '')
     search = Addon.plugin_queries.get('search', '')
+    mytag = Addon.plugin_queries.get('mytag', '')
     page = int(Addon.plugin_queries.get('page', 1))
     if sort:
         result = et.mixes(sort, tag, search, page)
@@ -100,7 +61,7 @@ elif mode == 'mixes':
             Addon.add_directory({'play': mix['id'], 'mix_name': mix['name'], 
                                  'img': mix['cover_urls']['max200'],
                                  'user': mix['user']['login']}, 
-                                name, mix['cover_urls']['max200'])
+                                name, mix['cover_urls']['max200'], folder=False)
         if result['next_page']:
             Addon.add_directory({'mode': 'mixes', 'sort': sort, 'tag': tag, 
                                  'search': search, 'page': result['next_page']}, 
@@ -111,6 +72,12 @@ elif mode == 'mixes':
             kb.doModal()
             if (kb.isConfirmed()):
                 search = kb.getText()
+        if mytag:
+            kb = xbmc.Keyboard('', Addon.get_string(30018), False)
+            kb.doModal()
+            if (kb.isConfirmed()):
+                tag = kb.getText()
+        
         Addon.add_directory({'mode': 'mixes', 'tag': tag, 'search': search, 
                              'sort': EightTracks.SORT_RECENT}, 
                             Addon.get_string(30011))
@@ -124,6 +91,7 @@ elif mode == 'mixes':
 elif mode == 'tags':
     page = int(Addon.plugin_queries.get('page', 1))
     result = et.tags(page)
+    Addon.add_directory({'mode': 'mixes', 'mytag': 1}, Addon.get_string(30018))
     for tag in result['tags']:
         Addon.add_directory({'mode': 'mixes', 'tag': tag['name']}, 
                             '%s (%d)' % (tag['name'], tag['taggings_count']))  
@@ -135,7 +103,7 @@ elif mode == 'main':
     Addon.add_directory({'mode': 'tags'}, Addon.get_string(30016))
     Addon.add_directory({'mode': 'mixes', 'search': 1}, Addon.get_string(30017))
 
-if not (play or next):
+if not play:
     Addon.end_of_directory()
       
 

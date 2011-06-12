@@ -103,7 +103,8 @@ def add_video_item(url, infolabels, img='', fanart='', total_items=0, playlist=F
         xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
                                     isFolder=False, totalItems=total_items)
 
-def add_directory(url_queries, title, img='', fanart='', total_items=0):
+def add_directory(url_queries, title, img='', fanart='', total_items=0, 
+                  folder=True):
     url = build_plugin_url(url_queries)
     log('adding dir: %s - %s' % (title, url))
     listitem = xbmcgui.ListItem(decode(title), iconImage=img, thumbnailImage=img)
@@ -111,7 +112,7 @@ def add_directory(url_queries, title, img='', fanart='', total_items=0):
         fanart = addon.getAddonInfo('path') + '/fanart.jpg'
     listitem.setProperty('fanart_image', fanart)
     xbmcplugin.addDirectoryItem(plugin_handle, url, listitem, 
-                                isFolder=True, totalItems=total_items)
+                                isFolder=folder, totalItems=total_items)
 
 def add_artist(artist, total_items=0):
     url_queries = {'mode': 'get_music_directory', 'id': artist['id']}

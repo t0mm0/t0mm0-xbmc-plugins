@@ -1,2 +1,6 @@
+[B]Version 0.2.0[/B]
+- Fix song info in osd for xbox and dharma
+- allow manual entry of tags
+
 [B]Version 0.1.0[/B]
 - Initial version

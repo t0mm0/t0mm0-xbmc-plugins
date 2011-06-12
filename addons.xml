@@ -45,7 +45,7 @@
     </extension>
 </addon>
 
-<addon id="plugin.audio.8tracks" version="0.1.0" name="8tracks" provider-name="t0mm0">
+<addon id="plugin.audio.8tracks" version="0.2.0" name="8tracks" provider-name="t0mm0">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
     </requires>

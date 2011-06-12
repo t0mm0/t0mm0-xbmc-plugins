@@ -125,23 +125,55 @@ class EightTracks:
 class EightTracksPlayer(xbmc.Player):
     def __init__(self, *args, **kwargs):
         xbmc.Player.__init__(self)
+        self.et = kwargs['et']
+        self.pl = Addon.get_playlist(xbmc.PLAYLIST_MUSIC, True)
+        self.ended = False
         self.track_playing = False
-
-    def play(self, item, listitem):
-        self.track_playing = True
-        xbmc.Player.play(self, item, listitem)            
 
     def onPlayBackStarted(self):
         Addon.log('onPlayBackStarted')
-        while self.track_playing:
+        self.add_next()
+        
+    def onPlayBackStopped(self):
+        Addon.log('onPlayBackStopped')
+        self.ended = True
+        
+    def play_mix(self, mix_id, mix_name, user, img):
+        Addon.log('play_mix')
+        self.mix_id = mix_id
+        self.mix_name = mix_name
+        self.user = user
+        self.img = img
+        self.add_next(True)
+        self.play(self.pl)
+        while not self.ended:
             Addon.log('player sleeping...')
             xbmc.sleep(1000)
         
-    def onPlayBackEnded(self):
-        Addon.log('onPlayBackEnded')
-        self.track_playing = False
+    def add_next(self, first=False):
+        Addon.log('add_next')
+        if first:
+            result = self.et.play(self.mix_id)
+        else:
+            result = self.et.next(self.mix_id)
+        if result['set']['at_end']:
+            Addon.log('moving to next mix')
+            result = self.et.next_mix(self.mix_id)
+            next_mix = result['next_mix']
+            self.mix_id = next_mix['id']
+            self.mix_name = next_mix['name']
+            self.user = next_mix['user']['login']
+            self.img = next_mix['cover_urls']['max200']
+            result = self.et.play(self.mix_id)
 
-    def onPlayBackStopped(self):
-        Addon.log('onPlayBackStopped')
-        self.track_playing = False
+        t = result['set']['track']
+        comment = 'mix: %s by %s' % (self.mix_name, self.user)
+        Addon.add_music_item(t['url'], {'title': t['name'], 
+                                        'artist': t['performer'], 
+                                        'comment': comment, 
+                                        'album': t['release_name']},
+                             img=self.img, playlist=self.pl)
+        while not self.isPlaying() and not first and not self.ended:
+            Addon.log('player sleeping (add_next)...')
+            xbmc.sleep(1000)
 

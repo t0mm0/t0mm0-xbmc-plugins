@@ -50,6 +50,7 @@ elif mode == 'mixes':
     sort = Addon.plugin_queries.get('sort', '')
     tag = Addon.plugin_queries.get('tag', '')
     search = Addon.plugin_queries.get('search', '')
+    mytag = Addon.plugin_queries.get('mytag', '')
     page = int(Addon.plugin_queries.get('page', 1))
     if sort:
         result = et.mixes(sort, tag, search, page)
@@ -71,6 +72,12 @@ elif mode == 'mixes':
             kb.doModal()
             if (kb.isConfirmed()):
                 search = kb.getText()
+        if mytag:
+            kb = xbmc.Keyboard('', Addon.get_string(30018), False)
+            kb.doModal()
+            if (kb.isConfirmed()):
+                tag = kb.getText()
+        
         Addon.add_directory({'mode': 'mixes', 'tag': tag, 'search': search, 
                              'sort': EightTracks.SORT_RECENT}, 
                             Addon.get_string(30011))
@@ -84,6 +91,7 @@ elif mode == 'mixes':
 elif mode == 'tags':
     page = int(Addon.plugin_queries.get('page', 1))
     result = et.tags(page)
+    Addon.add_directory({'mode': 'mixes', 'mytag': 1}, Addon.get_string(30018))
     for tag in result['tags']:
         Addon.add_directory({'mode': 'mixes', 'tag': tag['name']}, 
                             '%s (%d)' % (tag['name'], tag['taggings_count']))  

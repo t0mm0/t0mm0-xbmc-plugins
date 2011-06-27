@@ -70,10 +70,6 @@ class MuzuTv:
                                {'country': 'gb'})
         for v in re.finditer('mDown">.+?(\d+).+?mDown">.+?([\d*]+).+?<\/div>.+?(?:href=".+?\/(\d+)\/".+?)?src="(.+?)".+?alt="(.+?)"', html, re.DOTALL):
             pos, last_pos, video_id, thumb, title = v.groups()
-            #video_id = 0
-            #v_id = re.search('\/(\d+)\?', v.group(0))
-            #if v_id:
-            #    video_id = v_id.group(1)
             if not thumb.startswith('http'):
                 thumb = self.__BASE_URL + thumb
             videos.append({'title': title,

@@ -23,7 +23,7 @@
     <title>muzu.tv</title>
 
     <!-- (required) Major.minor.build -->
-    <version>0.1.3</version>
+    <version>0.1.4</version>
 
     <!-- (required) author name & email.  at least one author name is required -->
     <authors>

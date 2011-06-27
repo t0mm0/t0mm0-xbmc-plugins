@@ -38,10 +38,11 @@ class Ustvnow:
                                    '<\/a>(.+?)<\/td>.+?href="(.+?)"',
                                    html, re.DOTALL):
             name, icon, title, plot, url = channel.groups()
-            now = {'title': title, 'plot': plot.strip()}
-            url = '%s%s%d' % (stream_type, url[4:-1], quality + 1)
-            channels.append({'name': name, 'url': url, 
-                           'icon': icon, 'now': now})
+            if not url.startswith('http'):
+                now = {'title': title, 'plot': plot.strip()}
+                url = '%s%s%d' % (stream_type, url[4:-1], quality + 1)
+                channels.append({'name': name, 'url': url, 
+                               'icon': icon, 'now': now})
         return channels        
 
     def get_recordings(self, quality=1, stream_type='rtmp'):

@@ -127,7 +127,7 @@ else:
                                                                
     print 'Flash Enabled veetle.com Channels: %d' % len(channels)
 
-    do_grab = __settings__.getSetting('grab_schedule')
+    do_grab = False #__settings__.getSetting('grab_schedule')
     for channel in channels:
         url = pluginUrl + '?play=' + channel['channelId']
         sm = channel['logo'].get('sm', '')
@@ -142,7 +142,7 @@ else:
             if channel_info['programme']['success']:
                 schedule = VeetleSchedule(channel_info['programme']['payload'], 
                                           channel_info['broadcastStartedTime'],
-                                          channel_info['referenceClock'])
+                                          sechannel_info['referenceClock'])
                 channel['title'] += ' ' + schedule.get_now_playing()
                 channel['description'] += '\n' + schedule.get_schedule()
         

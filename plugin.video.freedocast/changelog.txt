@@ -1,3 +1,6 @@
+[B]Version 0.1.2[/B]
+- add support new octoshape streams using flash fallback
+
 [B]Version 0.1.1[/B]
 - add support for streams that use octoshape using flash fallback
 

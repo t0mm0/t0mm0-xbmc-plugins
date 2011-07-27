@@ -71,6 +71,7 @@ class Freedocast:
         chan_page = self.__get_html(url)
         watch_url = re.search('id="player" src="(.+?)"', chan_page).group(1)
         watch_page = self.__get_html(watch_url, referer=self.__build_url(url))
+        resolved = False
         s = re.search('file=(.+?)&streamer=(.+?)&', watch_page)
         if s:
             play, streamer = s.groups()
@@ -79,18 +80,19 @@ class Freedocast:
                        (streamer, app, play, self.__build_url(watch_url))
             Addon.log('resolved to: %s' % resolved)
         else:
-            s = re.search('streamsUrl:  \'(.+?)\'', watch_page)
+            s = re.search('stream: \'(rtmp.+?)\'', watch_page)
             if s:
-                xml_url = s.group(1)
-                xml = self.__get_html(xml_url)
-                s = re.search('<stream uri="(.+?)" stream="(.+?)"', xml)
-                if s:
-                    tcurl, play = s.groups()
-                    resolved = '%s/%s swfUrl=http://cdn.freedocast.com/player-octo/playerv2/swfs/broadkastplayer-yupp.swf pageUrl=%s' % (tcurl, play, watch_url)
-                else:
-                    resolved = False
+                stream_url = s.group(1)
+                resolved = '%s swfUrl=http://cdn.freedocast.com/player-octo/yume/v4/infinite-hd-player-FREEDOCAST.SWF pageUrl=%s' % (stream_url, watch_url)
             else:
-                resolved = False
+                s = re.search('streamsUrl:  \'(.+?)\'', watch_page)
+                if s:
+                    xml_url = s.group(1)
+                    xml = self.__get_html(xml_url)
+                    s = re.search('<stream uri="(.+?)" stream="(.+?)"', xml)
+                    if s:
+                        tcurl, play = s.groups()
+                        resolved = '%s/%s swfUrl=http://cdn.freedocast.com/player-octo/playerv2/swfs/broadkastplayer-yupp.swf pageUrl=%s' % (tcurl, play, watch_url)
         return resolved
 
     def resolve_video(self, v_id):

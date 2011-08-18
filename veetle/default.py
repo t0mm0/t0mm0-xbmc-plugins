@@ -39,6 +39,7 @@ def get_ajax_json(url):
     except ValueError, error_info:
         stream_json = {'success': False, 'payload': str(error_info)}
     if stream_json['success']:
+        print stream_json
         return stream_json['payload']
     else:
         print 'Problem getting info from: ' + url
@@ -148,7 +149,7 @@ else:
         
         listitem = xbmcgui.ListItem(channel['title'], iconImage=thumb, 
                                     thumbnailImage=thumb)
-        infoLabels = {'plot': channel['description']}
+        infoLabels = {'title': channel['title']}
         listitem.setInfo('video', infoLabels)
         listitem.setProperty('IsPlayable', 'true')
         xbmcplugin.addDirectoryItem(pluginHandle, url, listitem, 

@@ -1,3 +1,7 @@
+[B]Version 0.3.0[/B]
+- change method of finding streams
+- only show available streams (My9 reported by site as available free, but not actually available)
+
 [B]Version 0.2.0[/B]
 - add ability to view recordings you have previously made on ustvnow.com
 - fix bug with quality settings

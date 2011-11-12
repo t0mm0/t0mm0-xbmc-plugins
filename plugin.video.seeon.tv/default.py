@@ -1,5 +1,5 @@
 '''
-    jazzfm.com XBMC Plugin
+    azwatch.tv XBMC Plugin
     Copyright (C) 2011 t0mm0
 
     This program is free software: you can redistribute it and/or modify
@@ -18,10 +18,9 @@
 
 import xbmc, xbmcplugin, xbmcgui
 import urllib, urllib2, cgi
-import random
 import re
 
-BASE_URL = 'http://www.seeon.tv/channels/?p='
+BASE_URL = 'http://azwatch.tv/channels/?p='
 def add_directory(url_queries, title, img='', total_items=0):
     url = build_plugin_url(url_queries)
     xbmc.log('adding dir: %s - %s' % (title, url))
@@ -52,7 +51,7 @@ def get_rtmp_url(page_url):
     response = urllib2.urlopen(page_url)
     html = response.read()
     swf_url, play = re.search('data="(.+?)".+?file=(.+?)\.flv', html, re.DOTALL).group(1, 2)
-    rtmp = 'rtmp://live%d.seeon.tv/edge' % (random.randint(1, 10)) 
+    rtmp = 'rtmp://68.68.30.239/edge'
     rtmp += '/%s swfUrl=%s pageUrl=%s tcUrl=%s' % (play, swf_url, page_url, rtmp)
     xbmc.log('stream: ' + rtmp)
     return rtmp

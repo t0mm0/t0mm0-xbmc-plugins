@@ -1,2 +1,5 @@
+[B]Version 0.2.0[/B]
+- seeon.tv is now azwatch.tv
+
 [B]Version 0.1.0[/B]
 - Initial version

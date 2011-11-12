@@ -16,7 +16,7 @@
     </extension>
 </addon>
 
-<addon id="plugin.video.ustvnow" version="0.3.0" name="ustvnow" provider-name="t0mm0">
+<addon id="plugin.video.crackle" version="0.1.1" name="Crackle" provider-name="t0mm0">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
     </requires>
@@ -24,42 +24,13 @@
         <provides>video</provides>
     </extension>
     <extension point="xbmc.addon.metadata">
-        <summary>Plays live streams and recordings from ustvnow.com</summary>
-        <description>Live streaming US TV. You MUST log in to view streams (see addon settings). You can also play any recordings you have made on ustvnow.com</description>
+        <summary>Play movies and TV shows from Crackle.com</summary>
+        <description>Crackle is the place to experience pure entertainment: full-length movies, TV shows, and original series from genres that embody cool -- all uncut, uncensored, and unbelievably free. Well, that's what the PR waffle says anyway ;-)</description>
         <platform>all</platform>
     </extension>
 </addon>
 
-<addon id="plugin.audio.jazzfm" version="0.1.1" name="Jazz FM" provider-name="t0mm0">
-    <requires>
-        <import addon="xbmc.python" version="1.0"/>
-        <import addon="script.module.beautifulsoup"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>audio</provides>
-    </extension>
-    <extension point="xbmc.addon.metadata">
-        <summary>Listen to live stream and recoded shows from Jazz FM.</summary>
-        <description>Check out http://jazzfm.com</description>
-        <platform>all</platform>
-    </extension>
-</addon>
-
-<addon id="plugin.audio.8tracks" version="0.2.0" name="8tracks" provider-name="t0mm0">
-    <requires>
-        <import addon="xbmc.python" version="1.0"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>audio</provides>
-    </extension>
-    <extension point="xbmc.addon.metadata">
-        <summary>Listen to handcrafted internet radio.</summary>
-        <description>8tracks is handcrafted internet radio. It offers a simple way for people to share and discover music through an online mix, a short playlist containing at least 8 tracks.</description>
-        <platform>all</platform>
-    </extension>
-</addon>
-
-<addon id="plugin.video.muzu.tv" version="0.1.4" name="muzu.tv" provider-name="t0mm0">
+<addon id="plugin.video.freedocast" version="0.1.2" name="freedocast" provider-name="t0mm0">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
     </requires>
@@ -67,8 +38,8 @@
         <provides>video</provides>
     </extension>
     <extension point="xbmc.addon.metadata">
-        <summary>Plays music videos from ustvnow.com</summary>
-        <description>Choose from a huge selection of music videos available at muzu.tv</description>
+        <summary>Plays live streams from freedocast.com</summary>
+        <description>Live streaming from freedocast.com</description>
         <platform>all</platform>
     </extension>
 </addon>
@@ -83,22 +54,6 @@
     <extension point="xbmc.addon.metadata">
         <summary>Plays music and videos from Roadrunner Records</summary>
         <description>Plays music and videos from Roadrunner Records. Testing this made my ears hurt ;-)</description>
-        <platform>all</platform>
-    </extension>
-</addon>
-
-<addon id="plugin.audio.subsonic" version="0.3.0" name="Subsonic" provider-name="t0mm0">
-    <requires>
-        <import addon="xbmc.python" version="1.0"/>
-        <import addon="script.module.simplejson" version="2.0.10"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>audio</provides>
-    </extension>
-    <extension point= "xbmc.addon.metadata">
-        <summary>Access your Subsonic server</summary>
-        <description>Provides basic access to your Subsonic audio server.</description>
-        <disclaimer>You need a Subsonic server to connect to - check addon settings</disclaimer>
         <platform>all</platform>
     </extension>
 </addon>
@@ -145,7 +100,38 @@ JS</description>
 	</extension>
 </addon>
 
-<addon id="plugin.video.freedocast" version="0.1.2" name="freedocast" provider-name="t0mm0">
+<addon id="plugin.audio.jazzfm" version="0.1.1" name="Jazz FM" provider-name="t0mm0">
+    <requires>
+        <import addon="xbmc.python" version="1.0"/>
+        <import addon="script.module.beautifulsoup"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>audio</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Listen to live stream and recoded shows from Jazz FM.</summary>
+        <description>Check out http://jazzfm.com</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+
+<addon id="plugin.audio.subsonic" version="0.3.0" name="Subsonic" provider-name="t0mm0">
+    <requires>
+        <import addon="xbmc.python" version="1.0"/>
+        <import addon="script.module.simplejson" version="2.0.10"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>audio</provides>
+    </extension>
+    <extension point= "xbmc.addon.metadata">
+        <summary>Access your Subsonic server</summary>
+        <description>Provides basic access to your Subsonic audio server.</description>
+        <disclaimer>You need a Subsonic server to connect to - check addon settings</disclaimer>
+        <platform>all</platform>
+    </extension>
+</addon>
+
+<addon id="plugin.video.muzu.tv" version="0.1.4" name="muzu.tv" provider-name="t0mm0">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
     </requires>
@@ -153,13 +139,27 @@ JS</description>
         <provides>video</provides>
     </extension>
     <extension point="xbmc.addon.metadata">
-        <summary>Plays live streams from freedocast.com</summary>
-        <description>Live streaming from freedocast.com</description>
+        <summary>Plays music videos from ustvnow.com</summary>
+        <description>Choose from a huge selection of music videos available at muzu.tv</description>
         <platform>all</platform>
     </extension>
 </addon>
 
-<addon id="plugin.video.seeon.tv" version="0.1.0" name="seeon.tv" provider-name="t0mm0">
+<addon id="plugin.video.ustvnow" version="0.3.0" name="ustvnow" provider-name="t0mm0">
+    <requires>
+        <import addon="xbmc.python" version="1.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Plays live streams and recordings from ustvnow.com</summary>
+        <description>Live streaming US TV. You MUST log in to view streams (see addon settings). You can also play any recordings you have made on ustvnow.com</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+
+<addon id="plugin.video.seeon.tv" version="0.2.0" name="azwatch.tv" provider-name="t0mm0">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
     </requires>
@@ -168,21 +168,21 @@ JS</description>
     </extension>
     <extension point="xbmc.addon.metadata">
         <summary>Live Video</summary>
-        <description>Live video from http://seeon.tv</description>
+        <description>Live video from http://azwatch.tv</description>
         <platform>all</platform>
     </extension>
 </addon>
 
-<addon id="plugin.video.crackle" version="0.1.1" name="Crackle" provider-name="t0mm0">
+<addon id="plugin.audio.8tracks" version="0.2.0" name="8tracks" provider-name="t0mm0">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>video</provides>
+        <provides>audio</provides>
     </extension>
     <extension point="xbmc.addon.metadata">
-        <summary>Play movies and TV shows from Crackle.com</summary>
-        <description>Crackle is the place to experience pure entertainment: full-length movies, TV shows, and original series from genres that embody cool -- all uncut, uncensored, and unbelievably free. Well, that's what the PR waffle says anyway ;-)</description>
+        <summary>Listen to handcrafted internet radio.</summary>
+        <description>8tracks is handcrafted internet radio. It offers a simple way for people to share and discover music through an online mix, a short playlist containing at least 8 tracks.</description>
         <platform>all</platform>
     </extension>
 </addon>
